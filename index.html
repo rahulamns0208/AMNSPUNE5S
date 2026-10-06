@@ -3,110 +3,219 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AM/NS INDIA Pune Facility - 5S Assessment Portal</title>
+  <title>AM/NS INDIA Pune - 5S Assessment Portal</title>
   <style>
     :root {
       --amns-red: #E31837;
+      --amns-red-dark: #C1121F;
       --amns-dark: #1E2229;
-      --bg-light: #F4F6F9;
-      --border-color: #D1D5DB;
+      --bg-light: #F3F4F6;
+      --card-bg: #FFFFFF;
+      --border-color: #E5E7EB;
       --success-green: #10B981;
+      --warning-amber: #F59E0B;
     }
 
-    * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 0; }
-    body { background-color: var(--bg-light); color: #333; padding: 20px; }
-    
+    * { box-sizing: border-box; font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; margin: 0; padding: 0; }
+    body { background-color: var(--bg-light); color: #333; padding: 12px; }
+
     .container {
       max-width: 1250px;
       margin: 0 auto;
-      background: #fff;
-      border-radius: 8px;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      background: var(--card-bg);
+      border-radius: 12px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.08);
       overflow: hidden;
       border-top: 6px solid var(--amns-red);
+      animation: fadeIn 0.5s ease-in-out;
     }
 
+    /* Header Styling */
     .header {
       display: flex;
+      flex-wrap: wrap;
       justify-content: space-between;
       align-items: center;
-      padding: 20px 30px;
-      border-bottom: 2px solid var(--amns-red);
+      padding: 20px;
+      background: linear-gradient(135deg, #1E2229 0%, #2D3748 100%);
+      color: #FFF;
+      gap: 15px;
     }
-    .header h1 { font-size: 22px; color: var(--amns-dark); text-transform: uppercase; }
-    .header h2 { font-size: 14px; color: #666; font-weight: 500; margin-top: 4px; }
+    .header-text h1 { font-size: 20px; font-weight: 800; letter-spacing: 0.5px; color: #FFF; }
+    .header-text h2 { font-size: 13px; color: #CBD5E1; font-weight: 400; margin-top: 4px; }
     .amns-logo { color: var(--amns-red); font-weight: 900; font-size: 26px; text-align: right; }
-    .amns-logo span { color: var(--amns-dark); display: block; font-size: 13px; letter-spacing: 2px; }
+    .amns-logo span { color: #FFF; display: block; font-size: 11px; letter-spacing: 2px; }
 
+    /* Metadata Bar */
     .meta-bar {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
       gap: 15px;
-      background: #F9FAFB;
-      padding: 20px 30px;
+      background: #F8FAFC;
+      padding: 20px;
       border-bottom: 1px solid var(--border-color);
     }
     .field-group { display: flex; flex-direction: column; }
-    .field-group label { font-size: 11px; font-weight: 700; color: #4B5563; text-transform: uppercase; margin-bottom: 5px; }
-    .field-group input, .field-group select { padding: 9px 12px; border: 1px solid var(--border-color); border-radius: 4px; font-size: 14px; background: white; }
+    .field-group label { font-size: 11px; font-weight: 700; color: #475569; text-transform: uppercase; margin-bottom: 6px; }
+    .field-group input, .field-group select {
+      padding: 10px 12px;
+      border: 1.5px solid var(--border-color);
+      border-radius: 6px;
+      font-size: 14px;
+      background: #FFF;
+      transition: all 0.2s;
+    }
+    .field-group input:focus, .field-group select:focus {
+      outline: none;
+      border-color: var(--amns-red);
+      box-shadow: 0 0 0 3px rgba(227, 24, 55, 0.15);
+    }
 
+    /* Dashboard Counter */
     .dashboard {
       display: flex;
+      flex-wrap: wrap;
       justify-content: space-between;
       align-items: center;
-      background: #FEF2F2;
-      padding: 15px 30px;
-      border-bottom: 1px solid #FCA5A5;
+      background: #FFF5F5;
+      padding: 15px 20px;
+      border-bottom: 1px solid #FECDD3;
+      gap: 10px;
     }
-    .score-title { font-size: 15px; font-weight: 700; color: #991B1B; }
-    .score-value { font-size: 28px; font-weight: 900; color: var(--amns-red); }
+    .score-title { font-size: 14px; font-weight: 700; color: #9F1239; display: flex; align-items: center; gap: 8px; }
+    .score-badge {
+      background: var(--amns-red);
+      color: #FFF;
+      font-size: 24px;
+      font-weight: 900;
+      padding: 4px 16px;
+      border-radius: 30px;
+      box-shadow: 0 4px 10px rgba(227, 24, 55, 0.3);
+      transition: all 0.3s ease;
+    }
 
-    table { width: 100%; border-collapse: collapse; }
-    th, td { border: 1px solid var(--border-color); padding: 10px 12px; text-align: left; font-size: 13px; vertical-align: middle; }
-    th { background: #F3F4F6; color: #374151; font-weight: 700; text-transform: uppercase; font-size: 11px; }
-    .category-header { background: #E5E7EB; font-weight: 800; color: var(--amns-dark); font-size: 14px; text-transform: uppercase; }
+    /* Table Styling for Desktop */
+    .table-container { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; min-width: 700px; }
+    th, td { border: 1px solid var(--border-color); padding: 12px; text-align: left; font-size: 13px; vertical-align: middle; }
+    th { background: #F1F5F9; color: #334155; font-weight: 700; text-transform: uppercase; font-size: 11px; }
+    
+    .category-header {
+      background: #E2E8F0 !important;
+      font-weight: 800;
+      color: var(--amns-dark);
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      padding: 10px 12px;
+    }
 
+    /* Toggle Status Button */
     .btn-status {
-      padding: 8px 16px;
-      border: 1px solid var(--border-color);
+      padding: 10px 16px;
+      border: 2px solid var(--border-color);
       background: #FFF;
-      color: #6B7280;
-      border-radius: 4px;
+      color: #64748B;
+      border-radius: 20px;
       cursor: pointer;
-      font-weight: 700;
+      font-weight: 800;
       font-size: 12px;
       width: 100%;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
     }
-    .btn-status.done { background: var(--success-green); color: #FFF; border-color: var(--success-green); }
+    .btn-status.done {
+      background: var(--success-green);
+      color: #FFF;
+      border-color: var(--success-green);
+      box-shadow: 0 4px 10px rgba(16, 185, 129, 0.3);
+    }
+    .btn-status:active { transform: scale(0.96); }
 
+    /* Photo Upload Styling */
+    .photo-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
     .photo-box { display: flex; flex-direction: column; gap: 4px; }
-    .photo-box label { font-size: 10px; font-weight: 700; color: #666; text-transform: uppercase; }
-    .photo-box input { font-size: 11px; width: 100%; }
+    .photo-box label { font-size: 10px; font-weight: 700; color: #64748B; text-transform: uppercase; }
+    .photo-box input[type="file"] { font-size: 11px; width: 100%; }
 
-    .action-bar { padding: 20px 30px; background: #F9FAFB; text-align: right; border-top: 1px solid var(--border-color); }
+    /* Action Bar */
+    .action-bar {
+      padding: 20px;
+      background: #F8FAFC;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 15px;
+      border-top: 1px solid var(--border-color);
+    }
     .btn-submit {
-      background: var(--amns-red);
+      background: linear-gradient(135deg, var(--amns-red) 0%, var(--amns-red-dark) 100%);
       color: white;
       border: none;
-      padding: 12px 30px;
+      padding: 14px 32px;
       font-size: 15px;
-      font-weight: 700;
-      border-radius: 4px;
+      font-weight: 800;
+      border-radius: 8px;
       cursor: pointer;
       text-transform: uppercase;
+      letter-spacing: 0.5px;
+      box-shadow: 0 4px 12px rgba(227, 24, 55, 0.3);
+      transition: all 0.2s;
+      width: 100%;
+      max-width: 250px;
     }
-    .btn-submit:hover { background: #C1121F; }
-    #notification { margin-right: 15px; font-weight: 600; font-size: 14px; }
+    .btn-submit:hover { transform: translateY(-2px); box-shadow: 0 6px 16px rgba(227, 24, 55, 0.4); }
+    #notification { font-weight: 700; font-size: 13px; }
+
+    /* Animations */
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* Mobile Responsive Transformations */
+    @media (max-width: 768px) {
+      body { padding: 6px; }
+      .header { text-align: center; justify-content: center; }
+      .amns-logo { text-align: center; }
+      .action-bar { justify-content: center; text-align: center; }
+      .btn-submit { max-width: 100%; }
+      
+      /* Transform Table into Touch-Friendly Cards on Mobile */
+      table, thead, tbody, th, td, tr { display: block; }
+      thead { display: none; }
+      
+      tr[data-id] {
+        margin: 12px 10px;
+        background: #FFF;
+        border: 1.5px solid var(--border-color);
+        border-radius: 10px;
+        padding: 12px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+      }
+      
+      td {
+        border: none;
+        padding: 6px 0;
+      }
+      
+      td:nth-child(1) { font-weight: 800; color: var(--amns-red); font-size: 12px; }
+      td:nth-child(2) { font-size: 15px; font-weight: 700; color: var(--amns-dark); }
+      td:nth-child(3) { color: #475569; font-size: 13px; margin-bottom: 8px; }
+      
+      .photo-grid { margin: 8px 0; }
+    }
   </style>
 </head>
 <body>
 
 <div class="container">
-  <!-- Header -->
+  <!-- Header Banner -->
   <div class="header">
-    <div>
+    <div class="header-text">
       <h1>AM/NS INDIA — Pune Facility</h1>
-      <h2>Continuous 5S Progress Audit & Inspection Portal</h2>
+      <h2>Continuous 5S Audit & Execution Portal</h2>
     </div>
     <div class="amns-logo">AM/NS<span>INDIA</span></div>
   </div>
@@ -118,7 +227,7 @@
       <input type="text" id="reviewNo" value="Review No. 1">
     </div>
     <div class="field-group">
-      <label for="auditDate">Date</label>
+      <label for="auditDate">Audit Date</label>
       <input type="date" id="auditDate">
     </div>
     <div class="field-group">
@@ -145,61 +254,67 @@
     </div>
   </div>
 
-  <!-- Compliance Score Banner -->
+  <!-- Compliance Score Counter Banner -->
   <div class="dashboard">
-    <span class="score-title">Facility 5S Compliance Score</span>
-    <span class="score-value" id="scoreDisplay">0%</span>
+    <span class="score-title">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+      Overall 5S Compliance Score
+    </span>
+    <span class="score-badge" id="scoreDisplay">0%</span>
   </div>
 
-  <!-- Checklist Table -->
-  <table>
-    <thead>
-      <tr>
-        <th style="width: 4%;">Sr.</th>
-        <th style="width: 22%;">Checklist Item</th>
-        <th style="width: 38%;">Criteria & Action Standard</th>
-        <th style="width: 24%;">Upload Before / After Photos</th>
-        <th style="width: 12%; text-align: center;">Status</th>
-      </tr>
-    </thead>
-    <tbody id="checklistBody">
-      <!-- 1S Section -->
-      <tr><td colspan="5" class="category-header">1S — Sort (Seiri)</td></tr>
-      <tr data-id="1s_1"><td>1</td><td>Zone Identification</td><td>Area divided into 5S zones with clear responsibility boards.</td><td><div class="photo-box"><label>Before:</label><input type="file" class="before-img" accept="image/*"><label>After:</label><input type="file" class="after-img" accept="image/*"></div></td><td align="center"><button class="btn-status" onclick="toggleStatus(this)">NOT DONE</button></td></tr>
-      <tr data-id="1s_2"><td>2</td><td>Equipment Usage</td><td>All equipment in regular use; no unneeded items present.</td><td><div class="photo-box"><label>Before:</label><input type="file" class="before-img" accept="image/*"><label>After:</label><input type="file" class="after-img" accept="image/*"></div></td><td align="center"><button class="btn-status" onclick="toggleStatus(this)">NOT DONE</button></td></tr>
-      <tr data-id="1s_3"><td>3</td><td>Frequency Sorting</td><td>Items sorted by everyday use vs occasional use.</td><td><div class="photo-box"><label>Before:</label><input type="file" class="before-img" accept="image/*"><label>After:</label><input type="file" class="after-img" accept="image/*"></div></td><td align="center"><button class="btn-status" onclick="toggleStatus(this)">NOT DONE</button></td></tr>
-      <tr data-id="1s_4"><td>4</td><td>Red Tag Area</td><td>Red Tag holding area demarcated and actively used.</td><td><div class="photo-box"><label>Before:</label><input type="file" class="before-img" accept="image/*"><label>After:</label><input type="file" class="after-img" accept="image/*"></div></td><td align="center"><button class="btn-status" onclick="toggleStatus(this)">NOT DONE</button></td></tr>
-      <tr data-id="1s_5"><td>5</td><td>Weekly 1S Training</td><td>Weekly 1S training conducted on sorting & red-tagging protocols.</td><td><div class="photo-box"><label>Before:</label><input type="file" class="before-img" accept="image/*"><label>After:</label><input type="file" class="after-img" accept="image/*"></div></td><td align="center"><button class="btn-status" onclick="toggleStatus(this)">NOT DONE</button></td></tr>
+  <!-- Checklist Content -->
+  <div class="table-container">
+    <table>
+      <thead>
+        <tr>
+          <th style="width: 5%;">Sr.</th>
+          <th style="width: 22%;">Checklist Item</th>
+          <th style="width: 38%;">Criteria & Standard</th>
+          <th style="width: 23%;">Before / After Photos</th>
+          <th style="width: 12%; text-align: center;">Action</th>
+        </tr>
+      </thead>
+      <tbody id="checklistBody">
+        <!-- 1S Section -->
+        <tr><td colspan="5" class="category-header">1S — Sort (Seiri)</td></tr>
+        <tr data-id="1s_1"><td>1</td><td>Zone Identification</td><td>Area divided into 5S zones with clear responsibility boards.</td><td><div class="photo-grid"><div class="photo-box"><label>Before</label><input type="file" class="before-img" accept="image/*" capture="environment"></div><div class="photo-box"><label>After</label><input type="file" class="after-img" accept="image/*" capture="environment"></div></div></td><td><button class="btn-status" onclick="toggleStatus(this)">NOT DONE</button></td></tr>
+        <tr data-id="1s_2"><td>2</td><td>Equipment Usage</td><td>All equipment in regular use; no unneeded items present.</td><td><div class="photo-grid"><div class="photo-box"><label>Before</label><input type="file" class="before-img" accept="image/*" capture="environment"></div><div class="photo-box"><label>After</label><input type="file" class="after-img" accept="image/*" capture="environment"></div></div></td><td><button class="btn-status" onclick="toggleStatus(this)">NOT DONE</button></td></tr>
+        <tr data-id="1s_3"><td>3</td><td>Frequency Sorting</td><td>Items sorted by everyday use vs occasional use.</td><td><div class="photo-grid"><div class="photo-box"><label>Before</label><input type="file" class="before-img" accept="image/*" capture="environment"></div><div class="photo-box"><label>After</label><input type="file" class="after-img" accept="image/*" capture="environment"></div></div></td><td><button class="btn-status" onclick="toggleStatus(this)">NOT DONE</button></td></tr>
+        <tr data-id="1s_4"><td>4</td><td>Red Tag Area</td><td>Red Tag holding area demarcated and actively used.</td><td><div class="photo-grid"><div class="photo-box"><label>Before</label><input type="file" class="before-img" accept="image/*" capture="environment"></div><div class="photo-box"><label>After</label><input type="file" class="after-img" accept="image/*" capture="environment"></div></div></td><td><button class="btn-status" onclick="toggleStatus(this)">NOT DONE</button></td></tr>
+        <tr data-id="1s_5"><td>5</td><td>Weekly 1S Training</td><td>Weekly 1S training conducted on sorting & red-tagging protocols.</td><td><div class="photo-grid"><div class="photo-box"><label>Before</label><input type="file" class="before-img" accept="image/*" capture="environment"></div><div class="photo-box"><label>After</label><input type="file" class="after-img" accept="image/*" capture="environment"></div></div></td><td><button class="btn-status" onclick="toggleStatus(this)">NOT DONE</button></td></tr>
 
-      <!-- 2S Section -->
-      <tr><td colspan="5" class="category-header">2S — Set In Order (Seiton)</td></tr>
-      <tr data-id="2s_1"><td>6</td><td>Designated Items</td><td>No unnamed or undesignated items present in work zone.</td><td><div class="photo-box"><label>Before:</label><input type="file" class="before-img" accept="image/*"><label>After:</label><input type="file" class="after-img" accept="image/*"></div></td><td align="center"><button class="btn-status" onclick="toggleStatus(this)">NOT DONE</button></td></tr>
-      <tr data-id="2s_2"><td>7</td><td>Inventory Control</td><td>FIFO rules enforced with min/max quantity levels.</td><td><div class="photo-box"><label>Before:</label><input type="file" class="before-img" accept="image/*"><label>After:</label><input type="file" class="after-img" accept="image/*"></div></td><td align="center"><button class="btn-status" onclick="toggleStatus(this)">NOT DONE</button></td></tr>
-      <tr data-id="2s_3"><td>8</td><td>Tool Organization</td><td>Tools arranged functionally on shadow boards for quick access.</td><td><div class="photo-box"><label>Before:</label><input type="file" class="before-img" accept="image/*"><label>After:</label><input type="file" class="after-img" accept="image/*"></div></td><td align="center"><button class="btn-status" onclick="toggleStatus(this)">NOT DONE</button></td></tr>
-      <tr data-id="2s_4"><td>9</td><td>Safety & Directional Labeling</td><td>Emergency exits, eyewash, and safety routes clearly labeled.</td><td><div class="photo-box"><label>Before:</label><input type="file" class="before-img" accept="image/*"><label>After:</label><input type="file" class="after-img" accept="image/*"></div></td><td align="center"><button class="btn-status" onclick="toggleStatus(this)">NOT DONE</button></td></tr>
-      <tr data-id="2s_5"><td>10</td><td>Weekly 2S Training</td><td>Weekly 2S training held on visual controls & labeling.</td><td><div class="photo-box"><label>Before:</label><input type="file" class="before-img" accept="image/*"><label>After:</label><input type="file" class="after-img" accept="image/*"></div></td><td align="center"><button class="btn-status" onclick="toggleStatus(this)">NOT DONE</button></td></tr>
+        <!-- 2S Section -->
+        <tr><td colspan="5" class="category-header">2S — Set In Order (Seiton)</td></tr>
+        <tr data-id="2s_1"><td>6</td><td>Designated Items</td><td>No unnamed or undesignated items present in work zone.</td><td><div class="photo-grid"><div class="photo-box"><label>Before</label><input type="file" class="before-img" accept="image/*" capture="environment"></div><div class="photo-box"><label>After</label><input type="file" class="after-img" accept="image/*" capture="environment"></div></div></td><td><button class="btn-status" onclick="toggleStatus(this)">NOT DONE</button></td></tr>
+        <tr data-id="2s_2"><td>7</td><td>Inventory Control</td><td>FIFO rules enforced with min/max quantity levels.</td><td><div class="photo-grid"><div class="photo-box"><label>Before</label><input type="file" class="before-img" accept="image/*" capture="environment"></div><div class="photo-box"><label>After</label><input type="file" class="after-img" accept="image/*" capture="environment"></div></div></td><td><button class="btn-status" onclick="toggleStatus(this)">NOT DONE</button></td></tr>
+        <tr data-id="2s_3"><td>8</td><td>Tool Organization</td><td>Tools arranged functionally on shadow boards for quick access.</td><td><div class="photo-grid"><div class="photo-box"><label>Before</label><input type="file" class="before-img" accept="image/*" capture="environment"></div><div class="photo-box"><label>After</label><input type="file" class="after-img" accept="image/*" capture="environment"></div></div></td><td><button class="btn-status" onclick="toggleStatus(this)">NOT DONE</button></td></tr>
+        <tr data-id="2s_4"><td>9</td><td>Safety & Labeling</td><td>Emergency exits, eyewash, and safety routes clearly labeled.</td><td><div class="photo-grid"><div class="photo-box"><label>Before</label><input type="file" class="before-img" accept="image/*" capture="environment"></div><div class="photo-box"><label>After</label><input type="file" class="after-img" accept="image/*" capture="environment"></div></div></td><td><button class="btn-status" onclick="toggleStatus(this)">NOT DONE</button></td></tr>
+        <tr data-id="2s_5"><td>10</td><td>Weekly 2S Training</td><td>Weekly 2S training held on visual controls & labeling.</td><td><div class="photo-grid"><div class="photo-box"><label>Before</label><input type="file" class="before-img" accept="image/*" capture="environment"></div><div class="photo-box"><label>After</label><input type="file" class="after-img" accept="image/*" capture="environment"></div></div></td><td><button class="btn-status" onclick="toggleStatus(this)">NOT DONE</button></td></tr>
 
-      <!-- 3S Section -->
-      <tr><td colspan="5" class="category-header">3S — Shine (Seiso)</td></tr>
-      <tr data-id="3s_1"><td>11</td><td>Building Structure Cleanliness</td><td>Floors, walls, beams, and overhead piping free of dust/oil.</td><td><div class="photo-box"><label>Before:</label><input type="file" class="before-img" accept="image/*"><label>After:</label><input type="file" class="after-img" accept="image/*"></div></td><td align="center"><button class="btn-status" onclick="toggleStatus(this)">NOT DONE</button></td></tr>
-      <tr data-id="3s_2"><td>12</td><td>Machine & Equipment Cleanliness</td><td>Plant machinery and equipment kept clean and maintained.</td><td><div class="photo-box"><label>Before:</label><input type="file" class="before-img" accept="image/*"><label>After:</label><input type="file" class="after-img" accept="image/*"></div></td><td align="center"><button class="btn-status" onclick="toggleStatus(this)">NOT DONE</button></td></tr>
-      <tr data-id="3s_3"><td>13</td><td>Oil & Hydraulic Rooms</td><td>Oil cellars and hydraulic spaces deep cleaned and leakage-free.</td><td><div class="photo-box"><label>Before:</label><input type="file" class="before-img" accept="image/*"><label>After:</label><input type="file" class="after-img" accept="image/*"></div></td><td align="center"><button class="btn-status" onclick="toggleStatus(this)">NOT DONE</button></td></tr>
-      <tr data-id="3s_4"><td>14</td><td>Continuous Housekeeping</td><td>Continuous daily cleaning routines defined and executed.</td><td><div class="photo-box"><label>Before:</label><input type="file" class="before-img" accept="image/*"><label>After:</label><input type="file" class="after-img" accept="image/*"></div></td><td align="center"><button class="btn-status" onclick="toggleStatus(this)">NOT DONE</button></td></tr>
-      <tr data-id="3s_5"><td>15</td><td>Weekly 3S Training</td><td>Weekly 3S training conducted on cleaning-as-inspection.</td><td><div class="photo-box"><label>Before:</label><input type="file" class="before-img" accept="image/*"><label>After:</label><input type="file" class="after-img" accept="image/*"></div></td><td align="center"><button class="btn-status" onclick="toggleStatus(this)">NOT DONE</button></td></tr>
-    </tbody>
-  </table>
+        <!-- 3S Section -->
+        <tr><td colspan="5" class="category-header">3S — Shine (Seiso)</td></tr>
+        <tr data-id="3s_1"><td>11</td><td>Structure Cleanliness</td><td>Floors, walls, beams, and overhead piping free of dust/oil.</td><td><div class="photo-grid"><div class="photo-box"><label>Before</label><input type="file" class="before-img" accept="image/*" capture="environment"></div><div class="photo-box"><label>After</label><input type="file" class="after-img" accept="image/*" capture="environment"></div></div></td><td><button class="btn-status" onclick="toggleStatus(this)">NOT DONE</button></td></tr>
+        <tr data-id="3s_2"><td>12</td><td>Equipment Cleanliness</td><td>Plant machinery and equipment kept clean and maintained.</td><td><div class="photo-grid"><div class="photo-box"><label>Before</label><input type="file" class="before-img" accept="image/*" capture="environment"></div><div class="photo-box"><label>After</label><input type="file" class="after-img" accept="image/*" capture="environment"></div></div></td><td><button class="btn-status" onclick="toggleStatus(this)">NOT DONE</button></td></tr>
+        <tr data-id="3s_3"><td>13</td><td>Oil & Hydraulic Rooms</td><td>Oil cellars and hydraulic spaces deep cleaned and leakage-free.</td><td><div class="photo-grid"><div class="photo-box"><label>Before</label><input type="file" class="before-img" accept="image/*" capture="environment"></div><div class="photo-box"><label>After</label><input type="file" class="after-img" accept="image/*" capture="environment"></div></div></td><td><button class="btn-status" onclick="toggleStatus(this)">NOT DONE</button></td></tr>
+        <tr data-id="3s_4"><td>14</td><td>Continuous Housekeeping</td><td>Continuous daily cleaning routines defined and executed.</td><td><div class="photo-grid"><div class="photo-box"><label>Before</label><input type="file" class="before-img" accept="image/*" capture="environment"></div><div class="photo-box"><label>After</label><input type="file" class="after-img" accept="image/*" capture="environment"></div></div></td><td><button class="btn-status" onclick="toggleStatus(this)">NOT DONE</button></td></tr>
+        <tr data-id="3s_5"><td>15</td><td>Weekly 3S Training</td><td>Weekly 3S training conducted on cleaning-as-inspection.</td><td><div class="photo-grid"><div class="photo-box"><label>Before</label><input type="file" class="before-img" accept="image/*" capture="environment"></div><div class="photo-box"><label>After</label><input type="file" class="after-img" accept="image/*" capture="environment"></div></div></td><td><button class="btn-status" onclick="toggleStatus(this)">NOT DONE</button></td></tr>
+      </tbody>
+    </table>
+  </div>
 
-  <!-- Submission Bar -->
+  <!-- Bottom Action Bar -->
   <div class="action-bar">
-    <span id="notification"></span>
+    <span id="notification">Ready for submission</span>
     <button class="btn-submit" onclick="submitAssessment()">Submit Assessment</button>
   </div>
 </div>
 
 <script>
+  // Set default audit date to today
   document.getElementById('auditDate').valueAsDate = new Date();
 
-  // REPLACE THIS WITH YOUR DEPLOYED GOOGLE APPS SCRIPT WEB APP URL
+  // PASTE YOUR DEPLOYED GOOGLE APPS SCRIPT WEB APP URL HERE
   const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbw0yxU0shL4VWcRMfr-cziM4w0LrVe9zvXxbkcDI4gUYSizLjiolSoY039YRK-6sNX-Fw/exec';
 
   function toggleStatus(button) {
@@ -208,7 +323,7 @@
       button.innerText = 'NOT DONE';
     } else {
       button.classList.add('done');
-      button.innerText = 'DONE';
+      button.innerText = '✓ DONE';
     }
     calculateScore();
   }
@@ -220,7 +335,14 @@
       if (btn.classList.contains('done')) doneCount++;
     });
     const percentage = Math.round((doneCount / buttons.length) * 100);
-    document.getElementById('scoreDisplay').innerText = percentage + '%';
+    const scoreBadge = document.getElementById('scoreDisplay');
+    scoreBadge.innerText = percentage + '%';
+    
+    // Dynamic color shifts based on score percentage
+    if (percentage >= 80) scoreBadge.style.background = '#10B981';
+    else if (percentage >= 50) scoreBadge.style.background = '#F59E0B';
+    else scoreBadge.style.background = '#E31837';
+
     return { doneCount, total: buttons.length, percentage };
   }
 
@@ -238,7 +360,7 @@
     const notification = document.getElementById('notification');
     
     if (!GOOGLE_SCRIPT_URL || GOOGLE_SCRIPT_URL.includes('YOUR_GOOGLE_APPS_SCRIPT')) {
-      alert('Please paste your Google Apps Script Web App URL on line 203 of index.html!');
+      alert('Please paste your Google Apps Script URL on line 382 of index.html!');
       return;
     }
 
@@ -246,8 +368,8 @@
     const rows = document.querySelectorAll('#checklistBody tr[data-id]');
     const itemsData = [];
 
-    notification.style.color = '#D97706';
-    notification.innerText = 'Processing photos and submitting data... Please wait...';
+    notification.style.color = '#F59E0B';
+    notification.innerText = '⏳ Processing photos & saving data...';
 
     for (let row of rows) {
       const id = row.getAttribute('data-id');
@@ -288,13 +410,13 @@
       body: JSON.stringify(payload)
     })
     .then(() => {
-      notification.style.color = '#059669';
+      notification.style.color = '#10B981';
       notification.innerText = '✓ Assessment and photos backed up successfully to Google Sheets & Drive!';
     })
     .catch(error => {
       console.error('Error:', error);
-      notification.style.color = '#DC2626';
-      notification.innerText = 'X Submission failed. Check network connection.';
+      notification.style.color = '#E31837';
+      notification.innerText = '✕ Submission failed. Check connection.';
     });
   }
 </script>
