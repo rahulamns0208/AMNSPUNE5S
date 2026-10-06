@@ -3,617 +3,472 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AM/NS INDIA Pune - Area Incharge 5S Checklist</title>
+  <title>AM/NS India - 5S Audit Portal</title>
   <style>
     :root {
-      --primary-red: #E31837;
-      --primary-red-hover: #C1121F;
-      --dark-bg: #0F172A;
-      --card-bg: rgba(255, 255, 255, 0.96);
-      --slate-50: #F8FAFC;
-      --slate-100: #F1F5F9;
-      --slate-200: #E2E8F0;
-      --slate-600: #475569;
-      --slate-800: #1E293B;
-      --success-green: #10B981;
-      --warning-amber: #F59E0B;
-      --radius-lg: 16px;
-      --radius-md: 10px;
-      --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-      --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+      --primary: #0F172A;
+      --brand-red: #E31837;
+      --bg: #F8FAFC;
+      --card-bg: #FFFFFF;
+      --border: #E2E8F0;
+      --text: #1E293B;
+      --text-muted: #64748B;
+      --success: #10B981;
+      --danger: #EF4444;
     }
 
-    * { box-sizing: border-box; font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; margin: 0; padding: 0; }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    }
 
     body {
-      background: linear-gradient(135deg, #0F172A 0%, #1E293B 100%);
-      color: var(--slate-800);
-      min-height: 100vh;
-      padding: clamp(10px, 3vw, 30px);
+      background-color: var(--bg);
+      color: var(--text);
+      padding: 24px 16px;
       display: flex;
       justify-content: center;
-      align-items: flex-start;
     }
 
-    .main-wrapper {
+    .container {
       width: 100%;
-      max-width: 1250px;
+      max-width: 900px;
       background: var(--card-bg);
-      backdrop-filter: blur(12px);
-      border-radius: var(--radius-lg);
-      box-shadow: var(--shadow-lg);
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
       overflow: hidden;
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      animation: fadeIn 0.4s ease-out;
     }
 
-    /* Header */
-    .app-header {
+    .header {
       background: linear-gradient(135deg, #1E293B 0%, #0F172A 100%);
-      padding: clamp(16px, 4vw, 28px);
-      color: #FFFFFF;
+      padding: 24px;
+      color: white;
+      border-bottom: 4px solid var(--brand-red);
       display: flex;
-      flex-wrap: wrap;
       justify-content: space-between;
       align-items: center;
-      gap: 16px;
-      border-bottom: 4px solid var(--primary-red);
     }
 
-    .header-brand h1 {
-      font-size: clamp(20px, 4vw, 28px);
+    .header h1 {
+      font-size: 22px;
       font-weight: 800;
-      letter-spacing: -0.5px;
-      background: linear-gradient(90deg, #FFFFFF, #CBD5E1);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
     }
 
-    .header-brand p { color: #94A3B8; font-size: clamp(12px, 2vw, 14px); margin-top: 4px; }
+    .header p {
+      font-size: 13px;
+      color: #94A3B8;
+      margin-top: 4px;
+    }
 
     .logo-badge {
-      background: rgba(227, 24, 55, 0.15);
-      border: 1px solid var(--primary-red);
-      padding: 8px 16px;
-      border-radius: 30px;
       text-align: right;
     }
 
-    .logo-badge .company { font-weight: 900; font-size: 20px; color: var(--primary-red); line-height: 1; }
-    .logo-badge .sub { font-size: 10px; color: #FFF; letter-spacing: 2px; text-transform: uppercase; }
+    .logo-badge .brand {
+      font-size: 24px;
+      font-weight: 900;
+      color: var(--brand-red);
+      line-height: 1;
+    }
 
-    /* Metadata Bar */
-    .audit-meta-grid {
+    .logo-badge .sub {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 2px;
+    }
+
+    form {
+      padding: 24px;
+    }
+
+    .grid-2 {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      grid-template-columns: 1fr 1fr;
       gap: 16px;
-      padding: clamp(16px, 3vw, 24px);
-      background: var(--slate-50);
-      border-bottom: 1px solid var(--slate-200);
+      margin-bottom: 24px;
     }
 
-    .input-field { display: flex; flex-direction: column; gap: 6px; }
-    .input-field label { font-size: 11px; font-weight: 700; color: var(--slate-600); text-transform: uppercase; letter-spacing: 0.5px; }
-    .input-field input, .input-field select {
-      padding: 12px 14px;
-      border: 1px solid var(--slate-200);
-      border-radius: var(--radius-md);
-      font-size: 14px;
-      background: #FFFFFF;
-      color: var(--slate-800);
-      transition: all 0.2s ease;
-      box-shadow: var(--shadow-sm);
+    @media (max-width: 640px) {
+      .grid-2 { grid-template-columns: 1fr; }
     }
 
-    .input-field input:focus, .input-field select:focus {
-      outline: none;
-      border-color: var(--primary-red);
-      box-shadow: 0 0 0 3px rgba(227, 24, 55, 0.15);
-    }
-
-    /* Score Bar */
-    .score-summary-bar {
-      padding: 16px clamp(16px, 3vw, 24px);
-      background: #FFFFFF;
+    .form-group {
       display: flex;
-      flex-wrap: wrap;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .form-group label {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .form-group input, .form-group select {
+      padding: 10px 12px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      font-size: 14px;
+      outline: none;
+      background: #F8FAFC;
+    }
+
+    .form-group input:focus, .form-group select:focus {
+      border-color: var(--primary);
+      background: #FFF;
+    }
+
+    .score-card {
+      background: #F1F5F9;
+      padding: 16px;
+      border-radius: 8px;
+      display: flex;
       justify-content: space-between;
       align-items: center;
-      gap: 16px;
-      border-bottom: 1px solid var(--slate-200);
+      margin-bottom: 24px;
+      border-left: 4px solid var(--primary);
     }
 
-    .score-info { display: flex; align-items: center; gap: 12px; }
-    .score-info-title { font-size: 15px; font-weight: 700; color: var(--slate-800); }
-
-    .meter-container {
-      width: 200px;
-      height: 10px;
-      background: var(--slate-100);
-      border-radius: 20px;
-      overflow: hidden;
-      border: 1px solid var(--slate-200);
-    }
-
-    .meter-fill {
-      height: 100%;
-      width: 0%;
-      background: var(--primary-red);
-      transition: width 0.4s ease, background-color 0.4s ease;
-    }
-
-    .score-pill {
-      font-size: 20px;
-      font-weight: 900;
-      color: #FFFFFF;
-      background: var(--primary-red);
-      padding: 6px 18px;
-      border-radius: 30px;
-      box-shadow: var(--shadow-sm);
-      transition: background-color 0.3s ease;
-    }
-
-    /* Checklist */
-    .audit-body { padding: clamp(16px, 3vw, 24px); }
-
-    .category-section {
-      margin-bottom: 28px;
-      background: #FFFFFF;
-      border: 1px solid var(--slate-200);
-      border-radius: var(--radius-md);
-      overflow: hidden;
-      box-shadow: var(--shadow-sm);
-    }
-
-    .category-title {
-      background: var(--slate-800);
-      color: #FFFFFF;
-      padding: 12px 20px;
+    .score-card .title {
       font-size: 14px;
       font-weight: 700;
-      letter-spacing: 0.5px;
-      text-transform: uppercase;
-      display: flex;
-      align-items: center;
-      gap: 10px;
+      color: var(--text);
     }
 
-    .category-title::before {
-      content: '';
-      display: inline-block;
-      width: 8px;
-      height: 8px;
-      background: var(--primary-red);
-      border-radius: 50%;
+    .score-card .score-value {
+      font-size: 20px;
+      font-weight: 800;
+      color: var(--success);
     }
 
-    .checklist-items { display: flex; flex-direction: column; }
+    .section-title {
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 16px;
+      padding-bottom: 8px;
+      border-bottom: 2px solid var(--primary);
+    }
 
     .item-card {
-      display: grid;
-      grid-template-columns: 45px 1.2fr 2fr 1.5fr 160px 130px;
-      align-items: center;
-      gap: 14px;
-      padding: 16px 20px;
-      border-bottom: 1px solid var(--slate-100);
-      transition: background-color 0.2s ease;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 16px;
+      margin-bottom: 16px;
+      background: #FFF;
     }
 
-    .item-card:last-child { border-bottom: none; }
-    .item-card:hover { background: #FAF5F5; }
-
-    .item-index {
-      font-weight: 800;
-      color: var(--primary-red);
-      font-size: 13px;
-      background: var(--slate-100);
-      width: 32px;
-      height: 32px;
-      border-radius: 50%;
+    .item-header {
       display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .item-name { font-weight: 700; font-size: 14px; color: var(--slate-800); }
-    .item-desc { font-size: 13px; color: var(--slate-600); line-height: 1.4; }
-
-    .remark-field input {
-      width: 100%;
-      padding: 8px 10px;
-      font-size: 12px;
-      border: 1px solid var(--slate-200);
-      border-radius: 6px;
-      background: #FFFFFF;
-      color: var(--slate-800);
-    }
-
-    .photo-field { display: flex; flex-direction: column; gap: 4px; }
-    .photo-field label { font-size: 9px; font-weight: 800; color: var(--slate-600); text-transform: uppercase; }
-    .photo-field input[type="file"] { font-size: 10px; width: 100%; color: var(--slate-600); }
-
-    .btn-toggle {
-      width: 100%;
-      padding: 10px 12px;
-      border-radius: 30px;
-      border: 2px solid var(--slate-200);
-      background: #FFFFFF;
-      color: var(--slate-600);
-      font-weight: 800;
-      font-size: 11px;
-      cursor: pointer;
-      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
-      box-shadow: var(--shadow-sm);
-    }
-
-    .btn-toggle.active {
-      background: var(--success-green);
-      border-color: var(--success-green);
-      color: #FFFFFF;
-      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.35);
-    }
-
-    .dock-footer {
-      padding: 20px clamp(16px, 3vw, 24px);
-      background: var(--slate-50);
-      border-top: 1px solid var(--slate-200);
-      display: flex;
-      flex-wrap: wrap;
       justify-content: space-between;
       align-items: center;
-      gap: 16px;
+      gap: 12px;
+      margin-bottom: 12px;
     }
 
-    .status-text { font-size: 13px; font-weight: 600; color: var(--slate-600); }
+    .item-name {
+      font-size: 14px;
+      font-weight: 700;
+      flex: 1;
+    }
+
+    .status-select {
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-weight: 700;
+      font-size: 12px;
+      border: 1px solid var(--border);
+      cursor: pointer;
+    }
+
+    .status-select.VERIFIED { color: var(--success); border-color: var(--success); background: #ECFDF5; }
+    .status-select.NOT_COMPLIANT { color: var(--danger); border-color: var(--danger); background: #FEF2F2; }
+
+    .item-details {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    @media (max-width: 640px) {
+      .item-details { grid-template-columns: 1fr; }
+    }
+
+    .image-preview-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    .image-preview-container img {
+      width: 60px;
+      height: 60px;
+      object-fit: cover;
+      border-radius: 4px;
+      border: 1px solid var(--border);
+    }
 
     .btn-submit {
-      background: linear-gradient(135deg, var(--primary-red) 0%, var(--primary-red-hover) 100%);
-      color: #FFFFFF;
-      border: none;
-      padding: 14px 36px;
-      font-size: 15px;
-      font-weight: 800;
-      border-radius: var(--radius-md);
-      cursor: pointer;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      box-shadow: 0 4px 14px rgba(227, 24, 55, 0.35);
-      transition: all 0.2s ease;
       width: 100%;
-      max-width: 280px;
+      background: var(--brand-red);
+      color: white;
+      border: none;
+      padding: 14px;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      margin-top: 16px;
+      transition: background 0.2s;
     }
 
-    .btn-submit:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(227, 24, 55, 0.45); }
-
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
-
-    @media (max-width: 960px) {
-      .item-card { grid-template-columns: 36px 1fr; gap: 10px; padding: 16px; }
-      .item-desc { grid-column: 1 / -1; }
-      .remark-field { grid-column: 1 / -1; }
-      .photo-field { grid-column: 1 / -1; margin-top: 4px; }
-      .btn-toggle { grid-column: 1 / -1; margin-top: 4px; }
+    .btn-submit:hover {
+      background: #C1121F;
     }
 
-    @media (max-width: 600px) {
-      .dock-footer { flex-direction: column; text-align: center; }
-      .btn-submit { max-width: 100%; }
-      .meter-container { width: 100%; }
-      .score-summary-bar { flex-direction: column; align-items: stretch; }
+    .btn-submit:disabled {
+      background: #94A3B8;
+      cursor: not-allowed;
     }
+
+    #statusMessage {
+      margin-top: 16px;
+      padding: 12px;
+      border-radius: 6px;
+      font-size: 14px;
+      text-align: center;
+      display: none;
+    }
+
+    #statusMessage.success { background: #DEF7EC; color: #03543F; display: block; }
+    #statusMessage.error { background: #FDE8E8; color: #9B1C1C; display: block; }
   </style>
 </head>
 <body>
 
-<div class="main-wrapper">
-  <!-- Header -->
-  <header class="app-header">
-    <div class="header-brand">
-      <h1>AM/NS INDIA — Pune Facility</h1>
-      <p>Area / Department Incharge 5S Review & Compliance Checklist</p>
-    </div>
-    <div class="logo-badge">
-      <div class="company">AM/NS</div>
-      <div class="sub">INDIA</div>
-    </div>
-  </header>
-
-  <!-- Review Metadata -->
-  <section class="audit-meta-grid">
-    <div class="input-field">
-      <label for="reviewNo">Review Cycle / No.</label>
-      <input type="text" id="reviewNo" value="Review Cycle 1" placeholder="e.g. Review Cycle 1">
-    </div>
-    <div class="input-field">
-      <label for="auditDate">Review Date</label>
-      <input type="date" id="auditDate">
-    </div>
-    <div class="input-field">
-      <label for="zone">Department / Zone Selection</label>
-      <select id="zone" onchange="renderChecklist()">
-        <!-- Plant Operational Zones -->
-        <optgroup label="Plant & Production Zones">
-          <option value="CGL -1">CGL -1</option>
-          <option value="CGL -2">CGL -2</option>
-          <option value="CGL ELECTRICAL">CGL ELECTRICAL</option>
-          <option value="CGL ME">CGL ME</option>
-          <option value="CCL">CCL</option>
-          <option value="CRM">CRM</option>
-          <option value="ARP">ARP</option>
-          <option value="PICKLING">PICKLING</option>
-          <option value="CRM QUALITY">CRM QUALITY</option>
-          <option value="CGL QUALITY">CGL QUALITY</option>
-          <option value="CCL QUALITY">CCL QUALITY</option>
-          <option value="LOGISTICS">LOGISTICS</option>
-          <option value="UTILITY">UTILITY</option>
-          <option value="CIVIL">CIVIL</option>
-        </optgroup>
-        <!-- Office & Admin Zones -->
-        <optgroup label="Office & Administrative Zones">
-          <option value="MAIN OFFICE">MAIN OFFICE</option>
-          <option value="HR DEPARTMENT">HR DEPARTMENT</option>
-          <option value="FINANCE DEPARTMENT">FINANCE DEPARTMENT</option>
-          <option value="PROJECTS OFFICE">PROJECTS OFFICE</option>
-        </optgroup>
-      </select>
-    </div>
-    <div class="input-field">
-      <label for="incharge">Area Incharge Name</label>
-      <input type="text" id="incharge" placeholder="Enter Incharge Name">
-    </div>
-  </section>
-
-  <!-- Score Meter -->
-  <section class="score-summary-bar">
-    <div class="score-info">
-      <span class="score-info-title">5S Compliance Verification Score</span>
-      <div class="meter-container">
-        <div class="meter-fill" id="meterFill"></div>
+  <div class="container">
+    <div class="header">
+      <div>
+        <h1>AM/NS INDIA — Pune Facility</h1>
+        <p>5S Compliance Assessment Portal</p>
+      </div>
+      <div class="logo-badge">
+        <div class="brand">AM/NS</div>
+        <div class="sub">INDIA</div>
       </div>
     </div>
-    <div class="score-pill" id="scoreDisplay">0%</div>
-  </section>
 
-  <!-- Container where dynamic checklist renders -->
-  <main class="audit-body" id="checklistContainer"></main>
+    <form id="auditForm">
+      <!-- Audit Header Details -->
+      <div class="grid-2">
+        <div class="form-group">
+          <label>Facility Name</label>
+          <input type="text" id="facility" value="Pune Facility" required readonly>
+        </div>
+        <div class="form-group">
+          <label>Review Cycle / No.</label>
+          <input type="text" id="reviewNo" placeholder="e.g. AUD-2026-Q1" required>
+        </div>
+        <div class="form-group">
+          <label>Review Date</label>
+          <input type="date" id="date" required>
+        </div>
+        <div class="form-group">
+          <label>Department / Zone</label>
+          <select id="zone" required>
+            <option value="">Select Zone</option>
+            <option value="CGL -1">CGL -1</option>
+            <option value="CCL">CCL</option>
+            <option value="MAIN OFFICE">MAIN OFFICE</option>
+          </select>
+        </div>
+        <div class="form-group" style="grid-column: span 2;">
+          <label>Area Incharge</label>
+          <input type="text" id="incharge" placeholder="Enter Incharge Name" required>
+        </div>
+      </div>
 
-  <!-- Dock Footer -->
-  <footer class="dock-footer">
-    <div class="status-text" id="statusMessage">● Ready for Verification</div>
-    <button class="btn-submit" onclick="submitAssessment()">Submit Review</button>
-  </footer>
-</div>
+      <!-- Live Compliance Score -->
+      <div class="score-card">
+        <div class="title">Calculated 5S Compliance Score</div>
+        <div class="score-value" id="scoreDisplay">100%</div>
+      </div>
 
-<script>
-  document.getElementById('auditDate').valueAsDate = new Date();
+      <!-- 15 Audit Items -->
+      <div class="section-title">5S Compliance Checkpoints (15 Items)</div>
+      <div id="itemsContainer"></div>
 
-  // Insert Google Apps Script URL here
-  const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbw0yxU0shL4VWcRMfr-cziM4w0LrVe9zvXxbkcDI4gUYSizLjiolSoY039YRK-6sNX-Fw/exec';
+      <!-- Submit Button -->
+      <button type="submit" class="btn-submit" id="submitBtn">Submit 5S Audit Report</button>
+      <div id="statusMessage"></div>
+    </form>
+  </div>
 
-  // Zone Checkpoints Data Bank
-  const checklistData = {
-    plant: {
-      s1: [
-        { id: "1s_1", name: "Unused Material & Scrap", desc: "Verify no scrap, broken pallets, or defective coils accumulate in active plant zones." },
-        { id: "1s_2", name: "Red Tag Holding Area", desc: "Ensure non-moving machinery spare parts or tagged items are properly logged in the Red Tag Zone." },
-        { id: "1s_3", name: "Material & Raw Coil Sorting", desc: "Verify active production coils and consumables are separated from non-active stock." },
-        { id: "1s_4", name: "Clear Gangways & Exits", desc: "Ensure no temporary maintenance tools or scrap block crane routes or emergency exits." },
-        { id: "1s_5", name: "Weekly 1S Training (Mandatory)", desc: "Verify weekly 1S training/toolbox talk on sorting and red-tagging was conducted for plant staff." }
-      ],
-      s2: [
-        { id: "2s_1", name: "Name Plates & Equipment Tags", desc: "Check that all machinery, valves, panels, and chemical/oil drums have legible identification tags." },
-        { id: "2s_2", name: "Shadow Boards & Tool Racks", desc: "Ensure maintenance and operational tools are stored on designated shadow boards when not in use." },
-        { id: "2s_3", name: "Floor Demarcation Lines", desc: "Verify yellow/red boundary lines for coil storage, crane drop zones, and walkways are intact." },
-        { id: "2s_4", name: "Min/Max Storage Visual Controls", desc: "Check min/max visual stock indicators and pressure/temperature range markings." },
-        { id: "2s_5", name: "Weekly 2S Training (Mandatory)", desc: "Verify weekly 2S training was conducted on visual controls, tagging, and tool organization." }
-      ],
-      s3: [
-        { id: "3s_1", name: "Routine Floor & Area Sweeping", desc: "Confirm regular shift sweeping, trash disposal, and general cleanliness of plant floor." },
-        { id: "3s_2", name: "Oil Leakage & Spill Control", desc: "Inspect hydraulic rooms and oil cellars for leakage; ensure immediate cleanup and drip tray placement." },
-        { id: "3s_3", name: "Equipment & Desk Cleanliness", desc: "Verify operator desks, pulpit glass, and control panels are clean of industrial dust and grease." },
-        { id: "3s_4", name: "Cleanliness as Inspection", desc: "Verify operators check for loose bolts, cracks, or wear while performing cleaning routines." },
-        { id: "3s_5", name: "Weekly 3S Training (Mandatory)", desc: "Verify weekly 3S training was conducted on cleaning standards, spill control, and equipment care." }
-      ]
-    },
-    office: {
-      s1: [
-        { id: "1s_1", name: "Paper & File Archiving", desc: "Verify redundant documents, outdated printouts, and scrap paper are shredded/binned." },
-        { id: "1s_2", name: "Unused Hardware & E-Waste", desc: "Ensure broken monitors, cables, and old IT assets are red-tagged and sent to store." },
-        { id: "1s_3", name: "Desk Surface Sorting", desc: "Ensure only active work files and current work items are present on office desks." },
-        { id: "1s_4", name: "Clear Passageways & Doors", desc: "Verify office walkways, fire extinguishers, and electrical control DBs are completely unobstructed." },
-        { id: "1s_5", name: "Weekly 1S Training (Mandatory)", desc: "Verify weekly 1S office training was conducted on digital/physical sorting and decluttering." }
-      ],
-      s2: [
-        { id: "2s_1", name: "File Cabinet & Tray Labeling", desc: "Check that all physical file binders, drawers, and document trays have clear name tags." },
-        { id: "2s_2", name: "Stationery Shadow/Storage Trays", desc: "Verify stationery items (pens, staplers, stamps) have designated storage spots." },
-        { id: "2s_3", name: "Cable Management & Wiring", desc: "Ensure computer power cables, LAN cables, and extension cords are tied and route-managed." },
-        { id: "2s_4", name: "Digital File Organization", desc: "Verify shared drive folders follow standardized naming conventions and file structures." },
-        { id: "2s_5", name: "Weekly 2S Training (Mandatory)", desc: "Verify weekly 2S training conducted on document indexing and visual office standards." }
-      ],
-      s3: [
-        { id: "3s_1", name: "Daily Office Housekeeping", desc: "Verify desk dusting, floor mopping, and waste bin emptying are executed daily." },
-        { id: "3s_2", name: "IT Equipment Cleanliness", desc: "Ensure computer screens, keyboards, printers, and copiers are clean and dust-free." },
-        { id: "3s_3", name: "Pantry & Common Area Hygiene", desc: "Check pantry, coffee machine area, and conference rooms for neatness and clean surfaces." },
-        { id: "3s_4", name: "Clean Desk Policy Compliance", desc: "Ensure desks are left completely clean and clear of sensitive documents at shift end." },
-        { id: "3s_5", name: "Weekly 3S Training (Mandatory)", desc: "Verify weekly 3S training conducted on maintaining office hygiene and sanitization." }
-      ]
-    }
-  };
+  <script>
+    // Replace with your Power Automate HTTP Endpoint URL
+    const FLOW_HTTP_URL = "https://default37cd273a1cec4aaea29741480ea54f.8d.environment.api.powerplatform.com:443/powerautomate/automations/direct/cu/16/workflows/ee70acfdac394f1e816aa87f17c92d92/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=8bJao27nNOsK-em9gx4pSqMxOhGxqJ5O3ze7RGjsRCU";
 
-  function isOfficeZone(zoneValue) {
-    const officeZones = ["MAIN OFFICE", "HR DEPARTMENT", "FINANCE DEPARTMENT", "PROJECTS OFFICE"];
-    return officeZones.includes(zoneValue);
-  }
-
-  function renderChecklist() {
-    const selectedZone = document.getElementById('zone').value;
-    const type = isOfficeZone(selectedZone) ? 'office' : 'plant';
-    const data = checklistData[type];
-    const container = document.getElementById('checklistContainer');
-
-    let html = '';
-
-    const categories = [
-      { title: "1S — SORT (SEIRI) — Area Verification", items: data.s1 },
-      { title: "2S — SET IN ORDER (SEITON) — Area Verification", items: data.s2 },
-      { title: "3S — SHINE (SEISO) — Area Verification", items: data.s3 }
+    // 15 Standard 5S Checkpoints
+    const checkPoints = [
+      "1. Seiri (Sort): Unnecessary items identified & removed",
+      "2. Seiri (Sort): Red-tag system applied for unused tools/materials",
+      "3. Seiri (Sort): Walkways & aisles clear of obstructions",
+      "4. Seiton (Set in Order): Everything has a designated place & label",
+      "5. Seiton (Set in Order): Tools stored logically near usage areas",
+      "6. Seiton (Set in Order): Shadow boards/floor markings used properly",
+      "7. Seiso (Shine): Machines, equipment & work surfaces are clean",
+      "8. Seiso (Shine): Cleaning schedules assigned & followed",
+      "9. Seiso (Shine): No oil leaks, dust accumulations, or debris",
+      "10. Seiketsu (Standardize): 5S standards & visual controls posted",
+      "11. Seiketsu (Standardize): Color coding rules implemented consistently",
+      "12. Seiketsu (Standardize): Standard Operating Procedures (SOPs) visible",
+      "13. Shitsuke (Sustain): Daily 5S audits/checks conducted",
+      "14. Shitsuke (Sustain): Safety gear (PPE) used properly in zone",
+      "15. Shitsuke (Sustain): Team actively maintains 5S discipline"
     ];
 
-    let overallIndex = 1;
+    const itemsContainer = document.getElementById("itemsContainer");
+    const itemDataStore = {};
 
-    categories.forEach(cat => {
-      html += `
-        <div class="category-section">
-          <div class="category-title">${cat.title}</div>
-          <div class="checklist-items">
-      `;
+    // Set default date to today
+    document.getElementById("date").valueAsDate = new Date();
 
-      cat.items.forEach(item => {
-        html += `
-          <div class="item-card" data-id="${item.id}">
-            <div class="item-index">${overallIndex++}</div>
-            <div class="item-name">${item.name}</div>
-            <div class="item-desc">${item.desc}</div>
-            <div class="remark-field">
-              <input type="text" class="item-remark" placeholder="Remark (Optional)">
-            </div>
-            <div class="photo-field">
-              <label>Live Photos (Multiple)</label>
-              <input type="file" class="after-img" accept="image/*" capture="environment" multiple>
-            </div>
-            <button class="btn-toggle" onclick="toggleStatus(this)">NOT COMPLIANT</button>
+    // Render 15 checkpoints
+    checkPoints.forEach((title, index) => {
+      const itemId = `item_${index + 1}`;
+      itemDataStore[itemId] = {
+        id: itemId,
+        name: title,
+        status: "VERIFIED",
+        remark: "",
+        livePhotos: []
+      };
+
+      const card = document.createElement("div");
+      card.className = "item-card";
+      card.innerHTML = `
+        <div class="item-header">
+          <div class="item-name">${title}</div>
+          <select class="status-select VERIFIED" onchange="updateItemStatus('${itemId}', this)">
+            <option value="VERIFIED">✓ VERIFIED</option>
+            <option value="NOT COMPLIANT">✕ NOT COMPLIANT</option>
+          </select>
+        </div>
+        <div class="item-details">
+          <div class="form-group">
+            <label>Incharge Remarks</label>
+            <input type="text" placeholder="Add remarks..." onchange="updateItemRemark('${itemId}', this.value)">
           </div>
-        `;
-      });
-
-      html += `
+          <div class="form-group">
+            <label>Upload Live Photos</label>
+            <input type="file" accept="image/*" multiple onchange="handleImageUpload('${itemId}', this)">
+            <div class="image-preview-container" id="preview_${itemId}"></div>
           </div>
         </div>
       `;
+      itemsContainer.appendChild(card);
     });
 
-    container.innerHTML = html;
-    updateScoreMeter();
-  }
-
-  function toggleStatus(btn) {
-    if (btn.classList.contains('active')) {
-      btn.classList.remove('active');
-      btn.innerText = 'NOT COMPLIANT';
-    } else {
-      btn.classList.add('active');
-      btn.innerText = '✓ VERIFIED';
-    }
-    updateScoreMeter();
-  }
-
-  function updateScoreMeter() {
-    const buttons = document.querySelectorAll('.btn-toggle');
-    if (buttons.length === 0) return { score: 0 };
-
-    let activeCount = 0;
-    buttons.forEach(b => { if (b.classList.contains('active')) activeCount++; });
-
-    const score = Math.round((activeCount / buttons.length) * 100);
-    const scorePill = document.getElementById('scoreDisplay');
-    const meterFill = document.getElementById('meterFill');
-
-    scorePill.innerText = score + '%';
-    meterFill.style.width = score + '%';
-
-    if (score >= 80) {
-      scorePill.style.background = '#10B981';
-      meterFill.style.background = '#10B981';
-    } else if (score >= 50) {
-      scorePill.style.background = '#F59E0B';
-      meterFill.style.background = '#F59E0B';
-    } else {
-      scorePill.style.background = '#E31837';
-      meterFill.style.background = '#E31837';
+    // Update Status and recalculate compliance score
+    function updateItemStatus(itemId, selectElem) {
+      const status = selectElem.value;
+      itemDataStore[itemId].status = status;
+      selectElem.className = `status-select ${status === 'VERIFIED' ? 'VERIFIED' : 'NOT_COMPLIANT'}`;
+      calculateScore();
     }
 
-    return { activeCount, total: buttons.length, score };
-  }
-
-  function fileToBase64(file) {
-    return new Promise((resolve) => {
-      if (!file) { resolve(null); return; }
-      const reader = new FileReader();
-      reader.onload = () => resolve(reader.result);
-      reader.readAsDataURL(file);
-    });
-  }
-
-  async function submitAssessment() {
-    const statusMsg = document.getElementById('statusMessage');
-
-    if (!GOOGLE_SCRIPT_URL || GOOGLE_SCRIPT_URL.includes('YOUR_GOOGLE_APPS_SCRIPT')) {
-      alert('Please configure your GOOGLE_SCRIPT_URL in JavaScript!');
-      return;
+    function updateItemRemark(itemId, value) {
+      itemDataStore[itemId].remark = value;
     }
 
-    const scoreData = updateScoreMeter();
-    const rows = document.querySelectorAll('.item-card');
-    const itemResults = [];
+    // Calculate score percentage
+    function calculateScore() {
+      const items = Object.values(itemDataStore);
+      const verifiedCount = items.filter(i => i.status === "VERIFIED").length;
+      const score = Math.round((verifiedCount / items.length) * 100);
+      const scoreDisplay = document.getElementById("scoreDisplay");
+      scoreDisplay.innerText = `${score}%`;
+      
+      if (score >= 80) scoreDisplay.style.color = "#10B981"; // Green
+      else if (score >= 50) scoreDisplay.style.color = "#F59E0B"; // Orange
+      else scoreDisplay.style.color = "#EF4444"; // Red
+    }
 
-    statusMsg.innerHTML = '<span style="color:#F59E0B;">⏳ Processing photos & submitting...</span>';
+    // Convert uploaded photos to Base64 data URLs
+    function handleImageUpload(itemId, input) {
+      const files = Array.from(input.files);
+      const previewContainer = document.getElementById(`preview_${itemId}`);
+      previewContainer.innerHTML = "";
+      itemDataStore[itemId].livePhotos = [];
 
-    for (let row of rows) {
-      const id = row.getAttribute('data-id');
-      const name = row.querySelector('.item-name').innerText;
-      const isDone = row.querySelector('.btn-toggle').classList.contains('active');
-      const remarkVal = row.querySelector('.item-remark').value;
+      files.forEach(file => {
+        const reader = new FileReader();
+        reader.onload = function (e) {
+          const base64Img = e.target.result;
+          itemDataStore[itemId].livePhotos.push(base64Img);
 
-      const fileInput = row.querySelector('.after-img');
-      const files = Array.from(fileInput.files);
-      const photoBase64Array = [];
-
-      for (let file of files) {
-        const base64 = await fileToBase64(file);
-        if (base64) photoBase64Array.push(base64);
-      }
-
-      itemResults.push({
-        id: id,
-        name: name,
-        status: isDone ? 'VERIFIED' : 'NOT COMPLIANT',
-        remark: remarkVal,
-        livePhotos: photoBase64Array
+          const img = document.createElement("img");
+          img.src = base64Img;
+          previewContainer.appendChild(img);
+        };
+        reader.readAsDataURL(file);
       });
     }
 
-    const payload = {
-      facility: 'AM/NS INDIA Pune Facility',
-      reviewNo: document.getElementById('reviewNo').value,
-      date: document.getElementById('auditDate').value,
-      zone: document.getElementById('zone').value,
-      incharge: document.getElementById('incharge').value,
-      complianceScore: scoreData.score,
-      items: itemResults
-    };
+    // Handle Form Submission to Power Automate HTTP Endpoint
+    document.getElementById("auditForm").addEventListener("submit", async function (e) {
+      e.preventDefault();
 
-    fetch(GOOGLE_SCRIPT_URL, {
-      method: 'POST',
-      mode: 'no-cors',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload)
-    })
-    .then(() => {
-      statusMsg.innerHTML = '<span style="color:#10B981;">✓ Review successfully recorded & submitted!</span>';
-    })
-    .catch(err => {
-      console.error(err);
-      statusMsg.innerHTML = '<span style="color:#E31837;">✕ Submission failed. Check connection.</span>';
+      const submitBtn = document.getElementById("submitBtn");
+      const statusMessage = document.getElementById("statusMessage");
+
+      submitBtn.disabled = true;
+      submitBtn.innerText = "Submitting Audit Report...";
+      statusMessage.className = "";
+      statusMessage.style.display = "none";
+
+      const itemsArray = Object.values(itemDataStore);
+      const verifiedCount = itemsArray.filter(i => i.status === "VERIFIED").length;
+      const complianceScore = Math.round((verifiedCount / itemsArray.length) * 100);
+
+      const payload = {
+        facility: document.getElementById("facility").value,
+        reviewNo: document.getElementById("reviewNo").value,
+        date: document.getElementById("date").value,
+        zone: document.getElementById("zone").value,
+        incharge: document.getElementById("incharge").value,
+        complianceScore: complianceScore,
+        items: itemsArray
+      };
+
+      try {
+        const response = await fetch(FLOW_HTTP_URL, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(payload)
+        });
+
+        if (response.ok || response.status === 202) {
+          statusMessage.className = "success";
+          statusMessage.innerText = "✓ Audit report submitted successfully! Email report has been routed.";
+        } else {
+          throw new Error(`Server returned status: ${response.status}`);
+        }
+      } catch (err) {
+        statusMessage.className = "error";
+        statusMessage.innerText = `✕ Submission failed: ${err.message}`;
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.innerText = "Submit 5S Audit Report";
+      }
     });
-  }
-
-  // Initial Render on Page Load
-  window.onload = renderChecklist;
-</script>
-
+  </script>
 </body>
 </html>
