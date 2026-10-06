@@ -187,8 +187,8 @@
 
     .item-card {
       display: grid;
-      grid-template-columns: 45px 1.2fr 2fr 1.5fr 160px 130px;
-      align-items: center;
+      grid-template-columns: 45px 1.2fr 1.8fr 1.2fr 2fr 130px;
+      align-items: start;
       gap: 14px;
       padding: 16px 20px;
       border-bottom: 1px solid var(--slate-100);
@@ -209,11 +209,13 @@
       display: flex;
       align-items: center;
       justify-content: center;
+      margin-top: 4px;
     }
 
-    .item-name { font-weight: 700; font-size: 14px; color: var(--slate-800); }
-    .item-desc { font-size: 13px; color: var(--slate-600); line-height: 1.4; }
+    .item-name { font-weight: 700; font-size: 14px; color: var(--slate-800); margin-top: 6px; }
+    .item-desc { font-size: 13px; color: var(--slate-600); line-height: 1.4; margin-top: 6px; }
 
+    .remark-field { margin-top: 4px; }
     .remark-field input {
       width: 100%;
       padding: 8px 10px;
@@ -224,9 +226,78 @@
       color: var(--slate-800);
     }
 
-    .photo-field { display: flex; flex-direction: column; gap: 4px; }
-    .photo-field label { font-size: 9px; font-weight: 800; color: var(--slate-600); text-transform: uppercase; }
-    .photo-field input[type="file"] { font-size: 10px; width: 100%; color: var(--slate-600); }
+    /* Photo Upload Container & Preview Styling */
+    .photo-field { display: flex; flex-direction: column; gap: 6px; margin-top: 4px; }
+    .photo-field label { font-size: 10px; font-weight: 800; color: var(--slate-600); text-transform: uppercase; }
+    .photo-controls { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
+    
+    .btn-select-photo {
+      background: var(--slate-800);
+      color: #FFFFFF;
+      padding: 6px 12px;
+      font-size: 11px;
+      font-weight: 700;
+      border-radius: 6px;
+      cursor: pointer;
+      display: inline-block;
+      text-align: center;
+      transition: background 0.2s;
+    }
+    .btn-select-photo:hover { background: #000; }
+
+    .btn-upload-confirm {
+      background: var(--slate-600);
+      color: #FFFFFF;
+      border: none;
+      padding: 6px 12px;
+      font-size: 11px;
+      font-weight: 700;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .btn-upload-confirm.uploaded {
+      background: var(--success-green);
+    }
+
+    .preview-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 4px;
+    }
+
+    .preview-thumb {
+      position: relative;
+      width: 50px;
+      height: 50px;
+      border-radius: 6px;
+      overflow: hidden;
+      border: 1px solid var(--slate-200);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .preview-thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .preview-thumb .remove-btn {
+      position: absolute;
+      top: 2px;
+      right: 2px;
+      background: rgba(227, 24, 55, 0.85);
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 16px;
+      height: 16px;
+      font-size: 10px;
+      line-height: 16px;
+      text-align: center;
+      cursor: pointer;
+    }
 
     .btn-toggle {
       width: 100%;
@@ -244,6 +315,7 @@
       justify-content: center;
       gap: 6px;
       box-shadow: var(--shadow-sm);
+      margin-top: 4px;
     }
 
     .btn-toggle.active {
@@ -314,6 +386,7 @@
     </div>
   </header>
 
+  <!-- Section for Metadata including Reviewer SAP ID & Email ID -->
   <section class="audit-meta-grid">
     <div class="input-field">
       <label for="reviewNo">Review Cycle / No.</label>
@@ -351,8 +424,16 @@
       </select>
     </div>
     <div class="input-field">
-      <label for="incharge">Area Incharge Name</label>
-      <input type="text" id="incharge" placeholder="Enter Incharge Name">
+      <label for="incharge">REVIEWER Name</label>
+      <input type="text" id="incharge" placeholder="Enter Reviewer Name">
+    </div>
+    <div class="input-field">
+      <label for="reviewerSap">Reviewer SAP ID</label>
+      <input type="text" id="reviewerSap" placeholder="e.g. 10023456">
+    </div>
+    <div class="input-field">
+      <label for="reviewerEmail">Reviewer Mail ID</label>
+      <input type="email" id="reviewerEmail" placeholder="reviewer@amnsin.com">
     </div>
   </section>
 
@@ -377,8 +458,11 @@
 <script>
   document.getElementById('auditDate').valueAsDate = new Date();
 
-  // Embedded Power Automate HTTP POST Trigger Endpoint
+  // Power Automate HTTP POST Trigger Endpoint
   const POWER_AUTOMATE_URL = 'https://default37cd273a1cec4aaea29741480ea54f.8d.environment.api.powerplatform.com:443/powerautomate/automations/direct/cu/11/workflows/1266e8a9f7e64c4d9eb4149a283d413f/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=W1NIdQ-1aotVVL0F6YwUOv8Mw7jmU_X6hBjyjAsPS9k';
+
+  // Store uploaded image files per item ID (up to 10 photos optional)
+  const itemPhotos = {};
 
   const checklistData = {
     plant: {
@@ -450,13 +534,24 @@
     categories.forEach(cat => {
       html += `<div class="category-section"><div class="category-title">${cat.title}</div><div class="checklist-items">`;
       cat.items.forEach(item => {
+        // initialize photo array for item
+        itemPhotos[item.id] = itemPhotos[item.id] || [];
+
         html += `
           <div class="item-card" data-id="${item.id}">
             <div class="item-index">${overallIndex++}</div>
             <div class="item-name">${item.name}</div>
             <div class="item-desc">${item.desc}</div>
             <div class="remark-field"><input type="text" class="item-remark" placeholder="Remark (Optional)"></div>
-            <div class="photo-field"><label>Live Photos (Multiple)</label><input type="file" class="after-img" accept="image/*" capture="environment" multiple></div>
+            <div class="photo-field">
+              <label>Photos (Optional - Up to 10)</label>
+              <div class="photo-controls">
+                <label class="btn-select-photo" for="file_${item.id}">📷 Select / Click</label>
+                <input type="file" id="file_${item.id}" accept="image/*" capture="environment" multiple style="display:none;" onchange="handleImageSelection('${item.id}', this)">
+                <button type="button" class="btn-upload-confirm" id="btn_upload_${item.id}" onclick="confirmUpload('${item.id}')">Upload Final</button>
+              </div>
+              <div class="preview-container" id="preview_${item.id}"></div>
+            </div>
             <button class="btn-toggle" onclick="toggleStatus(this)">NOT COMPLIANT</button>
           </div>
         `;
@@ -466,6 +561,72 @@
 
     container.innerHTML = html;
     updateScoreMeter();
+  }
+
+  // Handle selected image files and display on-page thumbnails
+  function handleImageSelection(itemId, input) {
+    if (!input.files || input.files.length === 0) return;
+
+    const filesArr = Array.from(input.files);
+    
+    filesArr.forEach(file => {
+      if (itemPhotos[itemId].length < 10) {
+        itemPhotos[itemId].push(file);
+      }
+    });
+
+    // Reset input so re-selecting same file triggers change
+    input.value = '';
+    renderPreviews(itemId);
+
+    // Reset upload button status
+    const uploadBtn = document.getElementById(`btn_upload_${itemId}`);
+    uploadBtn.classList.remove('uploaded');
+    uploadBtn.innerText = 'Upload Final';
+  }
+
+  function renderPreviews(itemId) {
+    const previewBox = document.getElementById(`preview_${itemId}`);
+    previewBox.innerHTML = '';
+
+    itemPhotos[itemId].forEach((file, index) => {
+      const thumb = document.createElement('div');
+      thumb.className = 'preview-thumb';
+
+      const img = document.createElement('img');
+      img.src = URL.createObjectURL(file);
+
+      const removeBtn = document.createElement('button');
+      removeBtn.className = 'remove-btn';
+      removeBtn.innerText = '✕';
+      removeBtn.onclick = () => removeImage(itemId, index);
+
+      thumb.appendChild(img);
+      thumb.appendChild(removeBtn);
+      previewBox.appendChild(thumb);
+    });
+  }
+
+  function removeImage(itemId, index) {
+    itemPhotos[itemId].splice(index, 1);
+    renderPreviews(itemId);
+
+    const uploadBtn = document.getElementById(`btn_upload_${itemId}`);
+    uploadBtn.classList.remove('uploaded');
+    uploadBtn.innerText = 'Upload Final';
+  }
+
+  function confirmUpload(itemId) {
+    const count = itemPhotos[itemId] ? itemPhotos[itemId].length : 0;
+    const uploadBtn = document.getElementById(`btn_upload_${itemId}`);
+
+    if (count === 0) {
+      alert("No images selected for this point.");
+      return;
+    }
+
+    uploadBtn.classList.add('uploaded');
+    uploadBtn.innerText = `✓ ${count} Uploaded`;
   }
 
   function toggleStatus(btn) {
@@ -539,16 +700,18 @@
     const auditDate = document.getElementById('auditDate').value;
     const zone = document.getElementById('zone').value;
     const incharge = document.getElementById('incharge').value || 'N/A';
+    const reviewerSap = document.getElementById('reviewerSap').value || 'N/A';
+    const reviewerEmail = document.getElementById('reviewerEmail').value || 'N/A';
 
     let tableRowsHtml = '';
     let itemIdx = 1;
 
     for (let row of rows) {
+      const itemId = row.getAttribute('data-id');
       const name = row.querySelector('.item-name').innerText;
       const isDone = row.querySelector('.btn-toggle').classList.contains('active');
       const remarkVal = row.querySelector('.item-remark').value || 'N/A';
-      const fileInput = row.querySelector('.after-img');
-      const files = Array.from(fileInput.files);
+      const files = itemPhotos[itemId] || [];
 
       let imagesHtml = '';
       for (let file of files) {
@@ -573,7 +736,7 @@
       `;
     }
 
-    const fullHtmlReport = `<!DOCTYPE html><html><head><meta charset="utf-8"><style>body{font-family:Arial,sans-serif;margin:20px;color:#1E293B;}.header{background:#0F172A;color:white;padding:15px;border-bottom:4px solid #E31837;}.meta{margin:15px 0;font-size:13px;width:100%;border-collapse:collapse;}.meta td{padding:6px;border:1px solid #E2E8F0;background:#F8FAFC;}table.report-table{width:100%;border-collapse:collapse;font-size:11px;margin-top:10px;}table.report-table th{background:#1E293B;color:white;padding:8px;border:1px solid #CBD5E1;}</style></head><body><div class="header"><h2 style="margin:0;">AM/NS INDIA Pune Facility</h2><p style="margin:4px 0 0 0;font-size:12px;color:#94A3B8;">5S Compliance Review Audit Report</p></div><table class="meta"><tr><td><strong>Review Cycle:</strong> ${reviewNo}</td><td><strong>Date:</strong> ${auditDate}</td></tr><tr><td><strong>Zone / Dept:</strong> ${zone}</td><td><strong>Incharge:</strong> ${incharge}</td></tr><tr><td colspan="2"><strong>Compliance Score:</strong> <span style="font-size:16px;font-weight:bold;color:#E31837;">${scoreData.score}%</span></td></tr></table><table class="report-table"><thead><tr><th style="width:5%;">#</th><th style="width:30%;">Compliance Point</th><th style="width:15%;">Status</th><th style="width:25%;">Remark</th><th style="width:25%;">Captured Photos</th></tr></thead><tbody>${tableRowsHtml}</tbody></table></body></html>`;
+    const fullHtmlReport = `<!DOCTYPE html><html><head><meta charset="utf-8"><style>body{font-family:Arial,sans-serif;margin:20px;color:#1E293B;}.header{background:#0F172A;color:white;padding:15px;border-bottom:4px solid #E31837;}.meta{margin:15px 0;font-size:13px;width:100%;border-collapse:collapse;}.meta td{padding:6px;border:1px solid #E2E8F0;background:#F8FAFC;}table.report-table{width:100%;border-collapse:collapse;font-size:11px;margin-top:10px;}table.report-table th{background:#1E293B;color:white;padding:8px;border:1px solid #CBD5E1;}</style></head><body><div class="header"><h2 style="margin:0;">AM/NS INDIA Pune Facility</h2><p style="margin:4px 0 0 0;font-size:12px;color:#94A3B8;">5S Compliance Review Audit Report</p></div><table class="meta"><tr><td><strong>Review Cycle:</strong> ${reviewNo}</td><td><strong>Date:</strong> ${auditDate}</td></tr><tr><td><strong>Zone / Dept:</strong> ${zone}</td><td><strong>Incharge:</strong> ${incharge}</td></tr><tr><td><strong>Reviewer SAP ID:</strong> ${reviewerSap}</td><td><strong>Reviewer Email:</strong> ${reviewerEmail}</td></tr><tr><td colspan="2"><strong>Compliance Score:</strong> <span style="font-size:16px;font-weight:bold;color:#E31837;">${scoreData.score}%</span></td></tr></table><table class="report-table"><thead><tr><th style="width:5%;">#</th><th style="width:30%;">Compliance Point</th><th style="width:15%;">Status</th><th style="width:25%;">Remark</th><th style="width:25%;">Captured Photos</th></tr></thead><tbody>${tableRowsHtml}</tbody></table></body></html>`;
 
     const payload = {
       facility: 'AM/NS INDIA Pune Facility',
@@ -581,6 +744,8 @@
       date: auditDate,
       zone: zone,
       incharge: incharge,
+      reviewerSap: reviewerSap,
+      reviewerEmail: reviewerEmail,
       complianceScore: scoreData.score,
       htmlReport: fullHtmlReport
     };
@@ -593,7 +758,7 @@
       });
 
       if (response.ok) {
-        statusMsg.innerHTML = '<span style="color:#10B981;">✓ Review submitted! PDF report is being emailed to HOD.</span>';
+        statusMsg.innerHTML = '<span style="color:#10B981;">✓ Review submitted! PDF report is being emailed.</span>';
       } else {
         throw new Error('HTTP status ' + response.status);
       }
