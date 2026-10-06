@@ -37,7 +37,7 @@
 
     .main-wrapper {
       width: 100%;
-      max-width: 1250px;
+      max-width: 1300px;
       background: var(--card-bg);
       backdrop-filter: blur(12px);
       border-radius: var(--radius-lg);
@@ -187,8 +187,8 @@
 
     .item-card {
       display: grid;
-      grid-template-columns: 45px 1.2fr 2fr 1.5fr 180px 130px;
-      align-items: center;
+      grid-template-columns: 40px 1.2fr 2fr 1.2fr 220px 130px;
+      align-items: flex-start;
       gap: 14px;
       padding: 16px 20px;
       border-bottom: 1px solid var(--slate-100);
@@ -224,9 +224,87 @@
       color: var(--slate-800);
     }
 
-    .photo-field { display: flex; flex-direction: column; gap: 4px; }
-    .photo-field label { font-size: 9px; font-weight: 800; color: var(--slate-600); text-transform: uppercase; }
-    .photo-field input[type="file"] { font-size: 10px; width: 100%; color: var(--slate-600); }
+    /* Multi Image Upload Box */
+    .photo-control-box {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .photo-control-box label {
+      font-size: 10px;
+      font-weight: 800;
+      color: var(--slate-600);
+      text-transform: uppercase;
+    }
+
+    .photo-input-group {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+    }
+
+    .photo-input-group input[type="file"] {
+      font-size: 11px;
+      width: 100%;
+      color: var(--slate-600);
+    }
+
+    .btn-upload-img {
+      background: var(--slate-800);
+      color: #FFF;
+      border: none;
+      padding: 6px 12px;
+      font-size: 11px;
+      font-weight: 700;
+      border-radius: 4px;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: background 0.2s ease;
+    }
+
+    .btn-upload-img:hover {
+      background: var(--primary-red);
+    }
+
+    .img-preview-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 6px;
+    }
+
+    .img-preview-thumb {
+      position: relative;
+      width: 50px;
+      height: 50px;
+      border-radius: 4px;
+      overflow: hidden;
+      border: 1px solid var(--slate-200);
+    }
+
+    .img-preview-thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .btn-del-img {
+      position: absolute;
+      top: 2px;
+      right: 2px;
+      background: rgba(227, 24, 55, 0.9);
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 16px;
+      height: 16px;
+      font-size: 10px;
+      line-height: 16px;
+      text-align: center;
+      cursor: pointer;
+      font-weight: bold;
+    }
 
     .btn-toggle {
       width: 100%;
@@ -289,7 +367,7 @@
 
     @media (max-width: 960px) {
       .item-card { grid-template-columns: 36px 1fr; gap: 10px; padding: 16px; }
-      .item-desc, .remark-field, .photo-field, .btn-toggle { grid-column: 1 / -1; }
+      .item-desc, .remark-field, .photo-control-box, .btn-toggle { grid-column: 1 / -1; }
     }
 
     @media (max-width: 600px) {
@@ -351,8 +429,8 @@
       </select>
     </div>
     <div class="input-field">
-      <label for="incharge">Area Incharge Name</label>
-      <input type="text" id="incharge" placeholder="Enter Incharge Name">
+      <label for="incharge">REVIEWER Name</label>
+      <input type="text" id="incharge" placeholder="Enter Reviewer Name">
     </div>
     <div class="input-field">
       <label for="sapId">Reviewer SAP ID</label>
@@ -385,7 +463,11 @@
 <script>
   document.getElementById('auditDate').valueAsDate = new Date();
 
-  const POWER_AUTOMATE_URL = 'https://default37cd273a1cec4aaea29741480ea54f.8d.environment.api.powerplatform.com:443/powerautomate/automations/direct/cu/11/workflows/1266e8a9f7e64c4d9eb4149a283d413f/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=W1NIdQ-1aotVVL0F6YwUOv8Mw7jmU_X6hBjyjAsPS9k';
+  // Updated Web App Exec URL from Google Apps Script
+  const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbw0yxU0shL4VWcRMfr-cziM4w0LrVe9zvXxbkcDI4gUYSizLjiolSoY039YRK-6sNX-Fw/exec';
+
+  // Store uploaded image Data URLs per checkpoint ID
+  const itemImagesStore = {};
 
   const checklistData = {
     plant: {
@@ -457,13 +539,21 @@
     categories.forEach(cat => {
       html += `<div class="category-section"><div class="category-title">${cat.title}</div><div class="checklist-items">`;
       cat.items.forEach(item => {
+        itemImagesStore[item.id] = itemImagesStore[item.id] || [];
         html += `
           <div class="item-card" data-id="${item.id}">
             <div class="item-index">${overallIndex++}</div>
             <div class="item-name">${item.name}</div>
             <div class="item-desc">${item.desc}</div>
             <div class="remark-field"><input type="text" class="item-remark" placeholder="Remark (Optional)"></div>
-            <div class="photo-field"><label>Photos (Min 2, Max 5)</label><input type="file" class="after-img" accept="image/*" capture="environment" multiple onchange="validateImageCount(this)"></div>
+            <div class="photo-control-box">
+              <label>Attach Photos</label>
+              <div class="photo-input-group">
+                <input type="file" id="file_${item.id}" accept="image/*" capture="environment">
+                <button type="button" class="btn-upload-img" onclick="uploadImageForItem('${item.id}')">Upload</button>
+              </div>
+              <div class="img-preview-container" id="preview_${item.id}"></div>
+            </div>
             <button class="btn-toggle" onclick="toggleStatus(this)">NOT COMPLIANT</button>
           </div>
         `;
@@ -475,11 +565,53 @@
     updateScoreMeter();
   }
 
-  function validateImageCount(input) {
-    if (input.files.length > 5) {
-      alert("Maximum 5 images allowed per item. Please re-select.");
-      input.value = "";
+  async function uploadImageForItem(itemId) {
+    const fileInput = document.getElementById(`file_${itemId}`);
+    if (!fileInput || !fileInput.files || fileInput.files.length === 0) {
+      alert("Please select an image file first.");
+      return;
     }
+
+    const file = fileInput.files[0];
+    try {
+      const base64 = await processAndResizeImage(file);
+      if (base64) {
+        if (!itemImagesStore[itemId]) {
+          itemImagesStore[itemId] = [];
+        }
+        itemImagesStore[itemId].push(base64);
+        renderImagePreviews(itemId);
+        fileInput.value = ""; // Clear file input after successful add
+      }
+    } catch (err) {
+      console.error("Image processing error:", err);
+      alert("Unable to process selected image.");
+    }
+  }
+
+  function deleteImageForItem(itemId, index) {
+    if (itemImagesStore[itemId]) {
+      itemImagesStore[itemId].splice(index, 1);
+      renderImagePreviews(itemId);
+    }
+  }
+
+  function renderImagePreviews(itemId) {
+    const container = document.getElementById(`preview_${itemId}`);
+    if (!container) return;
+    const images = itemImagesStore[itemId] || [];
+    let html = '';
+
+    images.forEach((b64, idx) => {
+      html += `
+        <div class="img-preview-thumb">
+          <img src="${b64}" alt="Thumb">
+          <button type="button" class="btn-del-img" onclick="deleteImageForItem('${itemId}', ${idx})" title="Delete Image">✕</button>
+        </div>
+      `;
+    });
+
+    container.innerHTML = html;
   }
 
   function toggleStatus(btn) {
@@ -510,11 +642,13 @@
   }
 
   function processAndResizeImage(file) {
-    return new Promise((resolve) => {
+    return new Promise((resolve, reject) => {
       if (!file) return resolve(null);
       const reader = new FileReader();
+      reader.onerror = () => reject(new Error("File reading failed"));
       reader.onload = (e) => {
         const img = new Image();
+        img.onerror = () => reject(new Error("Image loading failed"));
         img.onload = () => {
           const canvas = document.createElement('canvas');
           let width = img.width;
@@ -553,21 +687,9 @@
     }
 
     const rows = document.querySelectorAll('.item-card');
-
-    // Validate minimum 2 photos per item rule
-    for (let i = 0; i < rows.length; i++) {
-      const fileInput = rows[i].querySelector('.after-img');
-      const itemCount = fileInput.files.length;
-      if (itemCount < 2) {
-        const itemName = rows[i].querySelector('.item-name').innerText;
-        alert(`Validation Error: Point "${itemName}" requires minimum 2 images (currently has ${itemCount}).`);
-        return;
-      }
-    }
-
     const scoreData = updateScoreMeter();
 
-    statusMsg.innerHTML = '<span style="color:#F59E0B;">⏳ Processing images & generating report...</span>';
+    statusMsg.innerHTML = '<span style="color:#F59E0B;">⏳ Processing images & submitting to Google Sheet...</span>';
 
     const reviewNo = document.getElementById('reviewNo').value;
     const auditDate = document.getElementById('auditDate').value;
@@ -578,21 +700,16 @@
     let itemIdx = 1;
 
     for (let row of rows) {
+      const itemId = row.getAttribute('data-id');
       const name = row.querySelector('.item-name').innerText;
       const isDone = row.querySelector('.btn-toggle').classList.contains('active');
       const remarkVal = row.querySelector('.item-remark').value || 'N/A';
-      const fileInput = row.querySelector('.after-img');
-      const files = Array.from(fileInput.files).slice(0, 5);
+      const uploadedList = itemImagesStore[itemId] || [];
 
       let imagesHtml = '';
-      if (files.length > 0) {
-        const base64List = await Promise.all(files.map(file => processAndResizeImage(file)));
-        base64List.forEach(base64 => {
-          if (base64) {
-            imagesHtml += `<img src="${base64}" style="width: 55px; height: 55px; object-fit: cover; border-radius: 4px; margin-right: 3px; margin-bottom: 3px; border: 1px solid #ccc;"/>`;
-          }
-        });
-      }
+      uploadedList.forEach(base64 => {
+        imagesHtml += `<img src="${base64}" style="width: 60px; height: 60px; object-fit: cover; border-radius: 4px; margin-right: 4px; margin-bottom: 4px; border: 1px solid #ccc;"/>`;
+      });
 
       const statusBadge = isDone 
         ? '<span style="color: #10B981; font-weight: bold;">✓ VERIFIED</span>' 
@@ -604,12 +721,12 @@
           <td style="padding: 8px; border: 1px solid #CBD5E1;">${name}</td>
           <td style="padding: 8px; border: 1px solid #CBD5E1;">${statusBadge}</td>
           <td style="padding: 8px; border: 1px solid #CBD5E1;">${remarkVal}</td>
-          <td style="padding: 8px; border: 1px solid #CBD5E1;">${imagesHtml}</td>
+          <td style="padding: 8px; border: 1px solid #CBD5E1;">${imagesHtml || 'No Image Attached'}</td>
         </tr>
       `;
     }
 
-    const fullHtmlReport = `<!DOCTYPE html><html><head><meta charset="utf-8"><style>body{font-family:Arial,sans-serif;margin:20px;color:#1E293B;}.header{background:#0F172A;color:white;padding:15px;border-bottom:4px solid #E31837;}.meta{margin:15px 0;font-size:13px;width:100%;border-collapse:collapse;}.meta td{padding:6px;border:1px solid #E2E8F0;background:#F8FAFC;}table.report-table{width:100%;border-collapse:collapse;font-size:11px;margin-top:10px;}table.report-table th{background:#1E293B;color:white;padding:8px;border:1px solid #CBD5E1;}</style></head><body><div class="header"><h2 style="margin:0;">AM/NS INDIA — Pune Facility</h2><p style="margin:4px 0 0 0;font-size:12px;color:#94A3B8;">5S Compliance Review Audit Report</p></div><table class="meta"><tr><td><strong>Review Cycle:</strong> ${reviewNo}</td><td><strong>Date:</strong> ${auditDate}</td></tr><tr><td><strong>Zone / Dept:</strong> ${zone}</td><td><strong>Area Incharge:</strong> ${incharge}</td></tr><tr><td><strong>Reviewer SAP ID:</strong> ${sapId}</td><td><strong>Reviewer Email:</strong> ${reviewerEmail}</td></tr><tr><td colspan="2"><strong>Compliance Score:</strong> <span style="font-size:16px;font-weight:bold;color:#E31837;">${scoreData.score}%</span></td></tr></table><table class="report-table"><thead><tr><th style="width:5%;">#</th><th style="width:25%;">Compliance Point</th><th style="width:12%;">Status</th><th style="width:23%;">Remark</th><th style="width:35%;">Captured Photos (2–5)</th></tr></thead><tbody>${tableRowsHtml}</tbody></table></body></html>`;
+    const fullHtmlReport = `<!DOCTYPE html><html><head><meta charset="utf-8"><style>body{font-family:Arial,sans-serif;margin:20px;color:#1E293B;}.header{background:#0F172A;color:white;padding:15px;border-bottom:4px solid #E31837;}.meta{margin:15px 0;font-size:13px;width:100%;border-collapse:collapse;}.meta td{padding:6px;border:1px solid #E2E8F0;background:#F8FAFC;}table.report-table{width:100%;border-collapse:collapse;font-size:11px;margin-top:10px;}table.report-table th{background:#1E293B;color:white;padding:8px;border:1px solid #CBD5E1;}</style></head><body><div class="header"><h2 style="margin:0;">AM/NS INDIA Pune Facility</h2><p style="margin:4px 0 0 0;font-size:12px;color:#94A3B8;">5S Compliance Review Audit Report</p></div><table class="meta"><tr><td><strong>Review Cycle:</strong> ${reviewNo}</td><td><strong>Date:</strong> ${auditDate}</td></tr><tr><td><strong>Zone / Dept:</strong> ${zone}</td><td><strong>Area Incharge:</strong> ${incharge}</td></tr><tr><td><strong>Reviewer SAP ID:</strong> ${sapId}</td><td><strong>Reviewer Email:</strong> ${reviewerEmail}</td></tr><tr><td colspan="2"><strong>Compliance Score:</strong> <span style="font-size:16px;font-weight:bold;color:#E31837;">${scoreData.score}%</span></td></tr></table><table class="report-table"><thead><tr><th style="width:5%;">#</th><th style="width:25%;">Compliance Point</th><th style="width:12%;">Status</th><th style="width:23%;">Remark</th><th style="width:35%;">Captured Photos</th></tr></thead><tbody>${tableRowsHtml}</tbody></table></body></html>`;
 
     const payload = {
       facility: 'AM/NS INDIA Pune Facility',
@@ -624,23 +741,21 @@
     };
 
     try {
-      const response = await fetch(POWER_AUTOMATE_URL, {
+      await fetch(GOOGLE_SCRIPT_URL, {
         method: 'POST',
+        mode: 'no-cors',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
       });
 
-      if (response.ok) {
-        statusMsg.innerHTML = '<span style="color:#10B981;">✓ Review submitted! Refreshing page...</span>';
-        setTimeout(() => {
-          location.reload();
-        }, 2000);
-      } else {
-        throw new Error('HTTP status ' + response.status);
-      }
+      statusMsg.innerHTML = '<span style="color:#10B981;">✓ Review submitted successfully! Refreshing page...</span>';
+      setTimeout(() => {
+        location.reload();
+      }, 2000);
+
     } catch (err) {
       console.error(err);
-      statusMsg.innerHTML = '<span style="color:#E31837;">✕ Submission failed. Check network connection.</span>';
+      statusMsg.innerHTML = '<span style="color:#E31837;">✕ Submission failed. Please check network connection.</span>';
     }
   }
 
