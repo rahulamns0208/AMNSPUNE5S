@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AM/NS INDIA Pune Facility - 5S Assessment Portal</title>
+  <style>
+    :root {
+      --amns-red: #E31837;
+      --amns-dark: #1E2229;
+      --bg-light: #F4F6F9;
+      --border-color: #D1D5DB;
+      --success-green: #10B981;
+    }
+
+    * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 0; }
+    body { background-color: var(--bg-light); color: #333; padding: 20px; }
+    
+    .container {
+      max-width: 1250px;
+      margin: 0 auto;
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      overflow: hidden;
+      border-top: 6px solid var(--amns-red);
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 30px;
+      border-bottom: 2px solid var(--amns-red);
+    }
+    .header h1 { font-size: 22px; color: var(--amns-dark); text-transform: uppercase; }
+    .header h2 { font-size: 14px; color: #666; font-weight: 500; margin-top: 4px; }
+    .amns-logo { color: var(--amns-red); font-weight: 900; font-size: 26px; text-align: right; }
+    .amns-logo span { color: var(--amns-dark); display: block; font-size: 13px; letter-spacing: 2px; }
+
+    .meta-bar {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 15px;
+      background: #F9FAFB;
+      padding: 20px 30px;
+      border-bottom: 1px solid var(--border-color);
+    }
+    .field-group { display: flex; flex-direction: column; }
+    .field-group label { font-size: 11px; font-weight: 700; color: #4B5563; text-transform: uppercase; margin-bottom: 5px; }
+    .field-group input, .field-group select { padding: 9px 12px; border: 1px solid var(--border-color); border-radius: 4px; font-size: 14px; background: white; }
+
+    .dashboard {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #FEF2F2;
+      padding: 15px 30px;
+      border-bottom: 1px solid #FCA5A5;
+    }
+    .score-title { font-size: 15px; font-weight: 700; color: #991B1B; }
+    .score-value { font-size: 28px; font-weight: 900; color: var(--amns-red); }
+
+    table { width: 100%; border-collapse: collapse; }
+    th, td { border: 1px solid var(--border-color); padding: 10px 12px; text-align: left; font-size: 13px; vertical-align: middle; }
+    th { background: #F3F4F6; color: #374151; font-weight: 700; text-transform: uppercase; font-size: 11px; }
+    .category-header { background: #E5E7EB; font-weight: 800; color: var(--amns-dark); font-size: 14px; text-transform: uppercase; }
+
+    .btn-status {
+      padding: 8px 16px;
+      border: 1px solid var(--border-color);
+      background: #FFF;
+      color: #6B7280;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: 700;
+      font-size: 12px;
+      width: 100%;
+    }
+    .btn-status.done { background: var(--success-green); color: #FFF; border-color: var(--success-green); }
+
+    .photo-box { display: flex; flex-direction: column; gap: 4px; }
+    .photo-box label { font-size: 10px; font-weight: 700; color: #666; text-transform: uppercase; }
+    .photo-box input { font-size: 11px; width: 100%; }
+
+    .action-bar { padding: 20px 30px; background: #F9FAFB; text-align: right; border-top: 1px solid var(--border-color); }
+    .btn-submit {
+      background: var(--amns-red);
+      color: white;
+      border: none;
+      padding: 12px 30px;
+      font-size: 15px;
+      font-weight: 700;
+      border-radius: 4px;
+      cursor: pointer;
+      text-transform: uppercase;
+    }
+    .btn-submit:hover { background: #C1121F; }
+    #notification { margin-right: 15px; font-weight: 600; font-size: 14px; }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <!-- Header -->
+  <div class="header">
+    <div>
+      <h1>AM/NS INDIA — Pune Facility</h1>
+      <h2>Continuous 5S Progress Audit & Inspection Portal</h2>
+    </div>
+    <div class="amns-logo">AM/NS<span>INDIA</span></div>
+  </div>
+
+  <!-- Metadata Bar -->
+  <div class="meta-bar">
+    <div class="field-group">
+      <label for="reviewNo">Review No.</label>
+      <input type="text" id="reviewNo" value="Review No. 1">
+    </div>
+    <div class="field-group">
+      <label for="auditDate">Date</label>
+      <input type="date" id="auditDate">
+    </div>
+    <div class="field-group">
+      <label for="zone">Department / Area Zone</label>
+      <select id="zone">
+        <option value="CGL -1">CGL -1</option>
+        <option value="CGL -2">CGL -2</option>
+        <option value="CGL ELECTRICAL">CGL ELECTRICAL</option>
+        <option value="CGL ME">CGL ME</option>
+        <option value="CCL">CCL</option>
+        <option value="CRM">CRM</option>
+        <option value="ARP">ARP</option>
+        <option value="PICKLING">PICKLING</option>
+        <option value="HR DEPARTMENT">HR DEPARTMENT</option>
+        <option value="PROJECTS OFFICE">PROJECTS OFFICE</option>
+        <option value="CIVIL">CIVIL</option>
+        <option value="MAIN OFFICE">MAIN OFFICE</option>
+        <option value="LOGISTIC">LOGISTIC</option>
+      </select>
+    </div>
+    <div class="field-group">
+      <label for="auditor">Assessor / Lead Name</label>
+      <input type="text" id="auditor" placeholder="Enter name">
+    </div>
+  </div>
+
+  <!-- Compliance Score Banner -->
+  <div class="dashboard">
+    <span class="score-title">Facility 5S Compliance Score</span>
+    <span class="score-value" id="scoreDisplay">0%</span>
+  </div>
+
+  <!-- Checklist Table -->
+  <table>
+    <thead>
+      <tr>
+        <th style="width: 4%;">Sr.</th>
+        <th style="width: 22%;">Checklist Item</th>
+        <th style="width: 38%;">Criteria & Action Standard</th>
+        <th style="width: 24%;">Upload Before / After Photos</th>
+        <th style="width: 12%; text-align: center;">Status</th>
+      </tr>
+    </thead>
+    <tbody id="checklistBody">
+      <!-- 1S Section -->
+      <tr><td colspan="5" class="category-header">1S — Sort (Seiri)</td></tr>
+      <tr data-id="1s_1"><td>1</td><td>Zone Identification</td><td>Area divided into 5S zones with clear responsibility boards.</td><td><div class="photo-box"><label>Before:</label><input type="file" class="before-img" accept="image/*"><label>After:</label><input type="file" class="after-img" accept="image/*"></div></td><td align="center"><button class="btn-status" onclick="toggleStatus(this)">NOT DONE</button></td></tr>
+      <tr data-id="1s_2"><td>2</td><td>Equipment Usage</td><td>All equipment in regular use; no unneeded items present.</td><td><div class="photo-box"><label>Before:</label><input type="file" class="before-img" accept="image/*"><label>After:</label><input type="file" class="after-img" accept="image/*"></div></td><td align="center"><button class="btn-status" onclick="toggleStatus(this)">NOT DONE</button></td></tr>
+      <tr data-id="1s_3"><td>3</td><td>Frequency Sorting</td><td>Items sorted by everyday use vs occasional use.</td><td><div class="photo-box"><label>Before:</label><input type="file" class="before-img" accept="image/*"><label>After:</label><input type="file" class="after-img" accept="image/*"></div></td><td align="center"><button class="btn-status" onclick="toggleStatus(this)">NOT DONE</button></td></tr>
+      <tr data-id="1s_4"><td>4</td><td>Red Tag Area</td><td>Red Tag holding area demarcated and actively used.</td><td><div class="photo-box"><label>Before:</label><input type="file" class="before-img" accept="image/*"><label>After:</label><input type="file" class="after-img" accept="image/*"></div></td><td align="center"><button class="btn-status" onclick="toggleStatus(this)">NOT DONE</button></td></tr>
+      <tr data-id="1s_5"><td>5</td><td>Weekly 1S Training</td><td>Weekly 1S training conducted on sorting & red-tagging protocols.</td><td><div class="photo-box"><label>Before:</label><input type="file" class="before-img" accept="image/*"><label>After:</label><input type="file" class="after-img" accept="image/*"></div></td><td align="center"><button class="btn-status" onclick="toggleStatus(this)">NOT DONE</button></td></tr>
+
+      <!-- 2S Section -->
+      <tr><td colspan="5" class="category-header">2S — Set In Order (Seiton)</td></tr>
+      <tr data-id="2s_1"><td>6</td><td>Designated Items</td><td>No unnamed or undesignated items present in work zone.</td><td><div class="photo-box"><label>Before:</label><input type="file" class="before-img" accept="image/*"><label>After:</label><input type="file" class="after-img" accept="image/*"></div></td><td align="center"><button class="btn-status" onclick="toggleStatus(this)">NOT DONE</button></td></tr>
+      <tr data-id="2s_2"><td>7</td><td>Inventory Control</td><td>FIFO rules enforced with min/max quantity levels.</td><td><div class="photo-box"><label>Before:</label><input type="file" class="before-img" accept="image/*"><label>After:</label><input type="file" class="after-img" accept="image/*"></div></td><td align="center"><button class="btn-status" onclick="toggleStatus(this)">NOT DONE</button></td></tr>
+      <tr data-id="2s_3"><td>8</td><td>Tool Organization</td><td>Tools arranged functionally on shadow boards for quick access.</td><td><div class="photo-box"><label>Before:</label><input type="file" class="before-img" accept="image/*"><label>After:</label><input type="file" class="after-img" accept="image/*"></div></td><td align="center"><button class="btn-status" onclick="toggleStatus(this)">NOT DONE</button></td></tr>
+      <tr data-id="2s_4"><td>9</td><td>Safety & Directional Labeling</td><td>Emergency exits, eyewash, and safety routes clearly labeled.</td><td><div class="photo-box"><label>Before:</label><input type="file" class="before-img" accept="image/*"><label>After:</label><input type="file" class="after-img" accept="image/*"></div></td><td align="center"><button class="btn-status" onclick="toggleStatus(this)">NOT DONE</button></td></tr>
+      <tr data-id="2s_5"><td>10</td><td>Weekly 2S Training</td><td>Weekly 2S training held on visual controls & labeling.</td><td><div class="photo-box"><label>Before:</label><input type="file" class="before-img" accept="image/*"><label>After:</label><input type="file" class="after-img" accept="image/*"></div></td><td align="center"><button class="btn-status" onclick="toggleStatus(this)">NOT DONE</button></td></tr>
+
+      <!-- 3S Section -->
+      <tr><td colspan="5" class="category-header">3S — Shine (Seiso)</td></tr>
+      <tr data-id="3s_1"><td>11</td><td>Building Structure Cleanliness</td><td>Floors, walls, beams, and overhead piping free of dust/oil.</td><td><div class="photo-box"><label>Before:</label><input type="file" class="before-img" accept="image/*"><label>After:</label><input type="file" class="after-img" accept="image/*"></div></td><td align="center"><button class="btn-status" onclick="toggleStatus(this)">NOT DONE</button></td></tr>
+      <tr data-id="3s_2"><td>12</td><td>Machine & Equipment Cleanliness</td><td>Plant machinery and equipment kept clean and maintained.</td><td><div class="photo-box"><label>Before:</label><input type="file" class="before-img" accept="image/*"><label>After:</label><input type="file" class="after-img" accept="image/*"></div></td><td align="center"><button class="btn-status" onclick="toggleStatus(this)">NOT DONE</button></td></tr>
+      <tr data-id="3s_3"><td>13</td><td>Oil & Hydraulic Rooms</td><td>Oil cellars and hydraulic spaces deep cleaned and leakage-free.</td><td><div class="photo-box"><label>Before:</label><input type="file" class="before-img" accept="image/*"><label>After:</label><input type="file" class="after-img" accept="image/*"></div></td><td align="center"><button class="btn-status" onclick="toggleStatus(this)">NOT DONE</button></td></tr>
+      <tr data-id="3s_4"><td>14</td><td>Continuous Housekeeping</td><td>Continuous daily cleaning routines defined and executed.</td><td><div class="photo-box"><label>Before:</label><input type="file" class="before-img" accept="image/*"><label>After:</label><input type="file" class="after-img" accept="image/*"></div></td><td align="center"><button class="btn-status" onclick="toggleStatus(this)">NOT DONE</button></td></tr>
+      <tr data-id="3s_5"><td>15</td><td>Weekly 3S Training</td><td>Weekly 3S training conducted on cleaning-as-inspection.</td><td><div class="photo-box"><label>Before:</label><input type="file" class="before-img" accept="image/*"><label>After:</label><input type="file" class="after-img" accept="image/*"></div></td><td align="center"><button class="btn-status" onclick="toggleStatus(this)">NOT DONE</button></td></tr>
+    </tbody>
+  </table>
+
+  <!-- Submission Bar -->
+  <div class="action-bar">
+    <span id="notification"></span>
+    <button class="btn-submit" onclick="submitAssessment()">Submit Assessment</button>
+  </div>
+</div>
+
+<script>
+  document.getElementById('auditDate').valueAsDate = new Date();
+
+  // REPLACE THIS WITH YOUR DEPLOYED GOOGLE APPS SCRIPT WEB APP URL
+  const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbw0yxU0shL4VWcRMfr-cziM4w0LrVe9zvXxbkcDI4gUYSizLjiolSoY039YRK-6sNX-Fw/exec';
+
+  function toggleStatus(button) {
+    if (button.classList.contains('done')) {
+      button.classList.remove('done');
+      button.innerText = 'NOT DONE';
+    } else {
+      button.classList.add('done');
+      button.innerText = 'DONE';
+    }
+    calculateScore();
+  }
+
+  function calculateScore() {
+    const buttons = document.querySelectorAll('.btn-status');
+    let doneCount = 0;
+    buttons.forEach(btn => {
+      if (btn.classList.contains('done')) doneCount++;
+    });
+    const percentage = Math.round((doneCount / buttons.length) * 100);
+    document.getElementById('scoreDisplay').innerText = percentage + '%';
+    return { doneCount, total: buttons.length, percentage };
+  }
+
+  function fileToBase64(file) {
+    return new Promise((resolve, reject) => {
+      if (!file) { resolve(null); return; }
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = error => reject(error);
+      reader.readAsDataURL(file);
+    });
+  }
+
+  async function submitAssessment() {
+    const notification = document.getElementById('notification');
+    
+    if (!GOOGLE_SCRIPT_URL || GOOGLE_SCRIPT_URL.includes('YOUR_GOOGLE_APPS_SCRIPT')) {
+      alert('Please paste your Google Apps Script Web App URL on line 203 of index.html!');
+      return;
+    }
+
+    const scoreData = calculateScore();
+    const rows = document.querySelectorAll('#checklistBody tr[data-id]');
+    const itemsData = [];
+
+    notification.style.color = '#D97706';
+    notification.innerText = 'Processing photos and submitting data... Please wait...';
+
+    for (let row of rows) {
+      const id = row.getAttribute('data-id');
+      const name = row.children[1].innerText;
+      const isDone = row.querySelector('.btn-status').classList.contains('done');
+      
+      const beforeFile = row.querySelector('.before-img').files[0];
+      const afterFile = row.querySelector('.after-img').files[0];
+
+      const beforeBase64 = await fileToBase64(beforeFile);
+      const afterBase64 = await fileToBase64(afterFile);
+
+      itemsData.push({
+        id: id,
+        name: name,
+        status: isDone ? 'DONE' : 'NOT DONE',
+        beforePhotoBase64: beforeBase64,
+        afterPhotoBase64: afterBase64
+      });
+    }
+
+    const payload = {
+      facility: 'AM/NS INDIA Pune Facility',
+      reviewNo: document.getElementById('reviewNo').value,
+      date: document.getElementById('auditDate').value,
+      zone: document.getElementById('zone').value,
+      auditor: document.getElementById('auditor').value,
+      complianceScore: scoreData.percentage,
+      doneCount: scoreData.doneCount,
+      totalItems: scoreData.total,
+      items: itemsData
+    };
+
+    fetch(GOOGLE_SCRIPT_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    })
+    .then(() => {
+      notification.style.color = '#059669';
+      notification.innerText = '✓ Assessment and photos backed up successfully to Google Sheets & Drive!';
+    })
+    .catch(error => {
+      console.error('Error:', error);
+      notification.style.color = '#DC2626';
+      notification.innerText = 'X Submission failed. Check network connection.';
+    });
+  }
+</script>
+
+</body>
+</html>
