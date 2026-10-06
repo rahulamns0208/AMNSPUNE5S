@@ -343,10 +343,13 @@
           <option value="CGL ME">CGL ME</option>
           <option value="CCL">CCL</option>
           <option value="CRM">CRM</option>
-          <option value="QUALITY (CGL/CCL/CRM)">QUALITY (CGL/CCL/CRM)</option>
           <option value="ARP">ARP</option>
           <option value="PICKLING">PICKLING</option>
+          <option value="CRM QUALITY">CRM QUALITY</option>
+          <option value="CGL QUALITY">CGL QUALITY</option>
+          <option value="CCL QUALITY">CCL QUALITY</option>
           <option value="LOGISTICS">LOGISTICS</option>
+          <option value="UTILITY">UTILITY</option>
           <option value="CIVIL">CIVIL</option>
         </optgroup>
         <!-- Office & Admin Zones -->
@@ -479,8 +482,8 @@
               <input type="text" class="item-remark" placeholder="Remark (Optional)">
             </div>
             <div class="photo-field">
-              <label>Live Photo</label>
-              <input type="file" class="after-img" accept="image/*" capture="environment">
+              <label>Live Photos (Multiple)</label>
+              <input type="file" class="after-img" accept="image/*" capture="environment" multiple>
             </div>
             <button class="btn-toggle" onclick="toggleStatus(this)">NOT COMPLIANT</button>
           </div>
@@ -565,15 +568,21 @@
       const isDone = row.querySelector('.btn-toggle').classList.contains('active');
       const remarkVal = row.querySelector('.item-remark').value;
 
-      const afterFile = row.querySelector('.after-img').files[0];
-      const afterBase64 = await fileToBase64(afterFile);
+      const fileInput = row.querySelector('.after-img');
+      const files = Array.from(fileInput.files);
+      const photoBase64Array = [];
+
+      for (let file of files) {
+        const base64 = await fileToBase64(file);
+        if (base64) photoBase64Array.push(base64);
+      }
 
       itemResults.push({
         id: id,
         name: name,
         status: isDone ? 'VERIFIED' : 'NOT COMPLIANT',
         remark: remarkVal,
-        livePhoto: afterBase64
+        livePhotos: photoBase64Array
       });
     }
 
