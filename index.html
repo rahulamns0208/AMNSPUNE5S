@@ -191,9 +191,9 @@
 
     .item-card {
       display: grid;
-      grid-template-columns: 45px 1.5fr 2.5fr 200px 140px;
+      grid-template-columns: 45px 1.2fr 2fr 1.5fr 160px 130px;
       align-items: center;
-      gap: 16px;
+      gap: 14px;
       padding: 16px 20px;
       border-bottom: 1px solid var(--slate-100);
       transition: background-color 0.2s ease;
@@ -218,10 +218,14 @@
     .item-name { font-weight: 700; font-size: 14px; color: var(--slate-800); }
     .item-desc { font-size: 13px; color: var(--slate-600); line-height: 1.4; }
 
-    .photo-inputs {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 8px;
+    .remark-field input {
+      width: 100%;
+      padding: 8px 10px;
+      font-size: 12px;
+      border: 1px solid var(--slate-200);
+      border-radius: 6px;
+      background: #FFFFFF;
+      color: var(--slate-800);
     }
 
     .photo-field { display: flex; flex-direction: column; gap: 4px; }
@@ -290,7 +294,8 @@
     @media (max-width: 960px) {
       .item-card { grid-template-columns: 36px 1fr; gap: 10px; padding: 16px; }
       .item-desc { grid-column: 1 / -1; }
-      .photo-inputs { grid-column: 1 / -1; margin-top: 6px; }
+      .remark-field { grid-column: 1 / -1; }
+      .photo-field { grid-column: 1 / -1; margin-top: 4px; }
       .btn-toggle { grid-column: 1 / -1; margin-top: 4px; }
     }
 
@@ -470,9 +475,12 @@
             <div class="item-index">${overallIndex++}</div>
             <div class="item-name">${item.name}</div>
             <div class="item-desc">${item.desc}</div>
-            <div class="photo-inputs">
-              <div class="photo-field"><label>Before Photo</label><input type="file" class="before-img" accept="image/*" capture="environment"></div>
-              <div class="photo-field"><label>After Photo</label><input type="file" class="after-img" accept="image/*" capture="environment"></div>
+            <div class="remark-field">
+              <input type="text" class="item-remark" placeholder="Remark (Optional)">
+            </div>
+            <div class="photo-field">
+              <label>Live Photo</label>
+              <input type="file" class="after-img" accept="image/*" capture="environment">
             </div>
             <button class="btn-toggle" onclick="toggleStatus(this)">NOT COMPLIANT</button>
           </div>
@@ -549,25 +557,23 @@
     const rows = document.querySelectorAll('.item-card');
     const itemResults = [];
 
-    statusMsg.innerHTML = '<span style="color:#F59E0B;">⏳ Processing images & submitting...</span>';
+    statusMsg.innerHTML = '<span style="color:#F59E0B;">⏳ Processing photos & submitting...</span>';
 
     for (let row of rows) {
       const id = row.getAttribute('data-id');
       const name = row.querySelector('.item-name').innerText;
       const isDone = row.querySelector('.btn-toggle').classList.contains('active');
+      const remarkVal = row.querySelector('.item-remark').value;
 
-      const beforeFile = row.querySelector('.before-img').files[0];
       const afterFile = row.querySelector('.after-img').files[0];
-
-      const beforeBase64 = await fileToBase64(beforeFile);
       const afterBase64 = await fileToBase64(afterFile);
 
       itemResults.push({
         id: id,
         name: name,
         status: isDone ? 'VERIFIED' : 'NOT COMPLIANT',
-        beforePhoto: beforeBase64,
-        afterPhoto: afterBase64
+        remark: remarkVal,
+        livePhoto: afterBase64
       });
     }
 
