@@ -1,405 +1,84 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AM/NS INDIA Pune - Area Incharge 5S Checklist</title>
-  <style>
-    :root {
-      --primary-red: #E31837;
-      --primary-red-hover: #C1121F;
-      --dark-bg: #0F172A;
-      --card-bg: rgba(255, 255, 255, 0.96);
-      --slate-50: #F8FAFC;
-      --slate-100: #F1F5F9;
-      --slate-200: #E2E8F0;
-      --slate-600: #475569;
-      --slate-800: #1E293B;
-      --success-green: #10B981;
-      --warning-amber: #F59E0B;
-      --radius-lg: 16px;
-      --radius-md: 10px;
-      --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-      --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-    }
-
-    * { box-sizing: border-box; font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; margin: 0; padding: 0; }
-
-    body {
-      background: linear-gradient(135deg, #0F172A 0%, #1E293B 100%);
-      color: var(--slate-800);
-      min-height: 100vh;
-      padding: clamp(10px, 3vw, 30px);
-      display: flex;
-      justify-content: center;
-      align-items: flex-start;
-    }
-
-    .main-wrapper {
-      width: 100%;
-      max-width: 1250px;
-      background: var(--card-bg);
-      backdrop-filter: blur(12px);
-      border-radius: var(--radius-lg);
-      box-shadow: var(--shadow-lg);
-      overflow: hidden;
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      animation: fadeIn 0.4s ease-out;
-    }
-
-    .app-header {
-      background: linear-gradient(135deg, #1E293B 0%, #0F172A 100%);
-      padding: clamp(16px, 4vw, 28px);
-      color: #FFFFFF;
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-between;
-      align-items: center;
-      gap: 16px;
-      border-bottom: 4px solid var(--primary-red);
-    }
-
-    .header-brand h1 {
-      font-size: clamp(20px, 4vw, 28px);
-      font-weight: 800;
-      letter-spacing: -0.5px;
-      background: linear-gradient(90deg, #FFFFFF, #CBD5E1);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-
-    .header-brand p { color: #94A3B8; font-size: clamp(12px, 2vw, 14px); margin-top: 4px; }
-
-    .logo-badge {
-      background: rgba(227, 24, 55, 0.15);
-      border: 1px solid var(--primary-red);
-      padding: 8px 16px;
-      border-radius: 30px;
-      text-align: right;
-    }
-
-    .logo-badge .company { font-weight: 900; font-size: 20px; color: var(--primary-red); line-height: 1; }
-    .logo-badge .sub { font-size: 10px; color: #FFF; letter-spacing: 2px; text-transform: uppercase; }
-
-    .audit-meta-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 16px;
-      padding: clamp(16px, 3vw, 24px);
-      background: var(--slate-50);
-      border-bottom: 1px solid var(--slate-200);
-    }
-
-    .input-field { display: flex; flex-direction: column; gap: 6px; }
-    .input-field label { font-size: 11px; font-weight: 700; color: var(--slate-600); text-transform: uppercase; letter-spacing: 0.5px; }
-    .input-field input, .input-field select {
-      padding: 12px 14px;
-      border: 1px solid var(--slate-200);
-      border-radius: var(--radius-md);
-      font-size: 14px;
-      background: #FFFFFF;
-      color: var(--slate-800);
-      transition: all 0.2s ease;
-      box-shadow: var(--shadow-sm);
-    }
-
-    .input-field input:focus, .input-field select:focus {
-      outline: none;
-      border-color: var(--primary-red);
-      box-shadow: 0 0 0 3px rgba(227, 24, 55, 0.15);
-    }
-
-    .score-summary-bar {
-      padding: 16px clamp(16px, 3vw, 24px);
-      background: #FFFFFF;
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-between;
-      align-items: center;
-      gap: 16px;
-      border-bottom: 1px solid var(--slate-200);
-    }
-
-    .score-info { display: flex; align-items: center; gap: 12px; }
-    .score-info-title { font-size: 15px; font-weight: 700; color: var(--slate-800); }
-
-    .meter-container {
-      width: 200px;
-      height: 10px;
-      background: var(--slate-100);
-      border-radius: 20px;
-      overflow: hidden;
-      border: 1px solid var(--slate-200);
-    }
-
-    .meter-fill {
-      height: 100%;
-      width: 0%;
-      background: var(--primary-red);
-      transition: width 0.4s ease, background-color 0.4s ease;
-    }
-
-    .score-pill {
-      font-size: 20px;
-      font-weight: 900;
-      color: #FFFFFF;
-      background: var(--primary-red);
-      padding: 6px 18px;
-      border-radius: 30px;
-      box-shadow: var(--shadow-sm);
-      transition: background-color 0.3s ease;
-    }
-
-    .audit-body { padding: clamp(16px, 3vw, 24px); }
-
-    .category-section {
-      margin-bottom: 28px;
-      background: #FFFFFF;
-      border: 1px solid var(--slate-200);
-      border-radius: var(--radius-md);
-      overflow: hidden;
-      box-shadow: var(--shadow-sm);
-    }
-
-    .category-title {
-      background: var(--slate-800);
-      color: #FFFFFF;
-      padding: 12px 20px;
-      font-size: 14px;
-      font-weight: 700;
-      letter-spacing: 0.5px;
-      text-transform: uppercase;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .category-title::before {
-      content: '';
-      display: inline-block;
-      width: 8px;
-      height: 8px;
-      background: var(--primary-red);
-      border-radius: 50%;
-    }
-
-    .checklist-items { display: flex; flex-direction: column; }
-
-    .item-card {
-      display: grid;
-      grid-template-columns: 45px 1.2fr 1.8fr 1.2fr 2fr 130px;
-      align-items: start;
-      gap: 14px;
-      padding: 16px 20px;
-      border-bottom: 1px solid var(--slate-100);
-      transition: background-color 0.2s ease;
-    }
-
-    .item-card:last-child { border-bottom: none; }
-    .item-card:hover { background: #FAF5F5; }
-
-    .item-index {
-      font-weight: 800;
-      color: var(--primary-red);
-      font-size: 13px;
-      background: var(--slate-100);
-      width: 32px;
-      height: 32px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin-top: 4px;
-    }
-
-    .item-name { font-weight: 700; font-size: 14px; color: var(--slate-800); margin-top: 6px; }
-    .item-desc { font-size: 13px; color: var(--slate-600); line-height: 1.4; margin-top: 6px; }
-
-    .remark-field { margin-top: 4px; }
-    .remark-field input {
-      width: 100%;
-      padding: 8px 10px;
-      font-size: 12px;
-      border: 1px solid var(--slate-200);
-      border-radius: 6px;
-      background: #FFFFFF;
-      color: var(--slate-800);
-    }
-
-    /* Photo Upload Container & Preview Styling */
-    .photo-field { display: flex; flex-direction: column; gap: 6px; margin-top: 4px; }
-    .photo-field label { font-size: 10px; font-weight: 800; color: var(--slate-600); text-transform: uppercase; }
-    .photo-controls { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
-    
-    .btn-select-photo {
-      background: var(--slate-800);
-      color: #FFFFFF;
-      padding: 6px 12px;
-      font-size: 11px;
-      font-weight: 700;
-      border-radius: 6px;
-      cursor: pointer;
-      display: inline-block;
-      text-align: center;
-      transition: background 0.2s;
-    }
-    .btn-select-photo:hover { background: #000; }
-
-    .btn-upload-confirm {
-      background: var(--slate-600);
-      color: #FFFFFF;
-      border: none;
-      padding: 6px 12px;
-      font-size: 11px;
-      font-weight: 700;
-      border-radius: 6px;
-      cursor: pointer;
-      transition: background 0.2s;
-    }
-    .btn-upload-confirm.uploaded {
-      background: var(--success-green);
-    }
-
-    .preview-container {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
-      margin-top: 4px;
-    }
-
-    .preview-thumb {
-      position: relative;
-      width: 50px;
-      height: 50px;
-      border-radius: 6px;
-      overflow: hidden;
-      border: 1px solid var(--slate-200);
-      box-shadow: var(--shadow-sm);
-    }
-
-    .preview-thumb img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-
-    .preview-thumb .remove-btn {
-      position: absolute;
-      top: 2px;
-      right: 2px;
-      background: rgba(227, 24, 55, 0.85);
-      color: white;
-      border: none;
-      border-radius: 50%;
-      width: 16px;
-      height: 16px;
-      font-size: 10px;
-      line-height: 16px;
-      text-align: center;
-      cursor: pointer;
-    }
-
-    .btn-toggle {
-      width: 100%;
-      padding: 10px 12px;
-      border-radius: 30px;
-      border: 2px solid var(--slate-200);
-      background: #FFFFFF;
-      color: var(--slate-600);
-      font-weight: 800;
-      font-size: 11px;
-      cursor: pointer;
-      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
-      box-shadow: var(--shadow-sm);
-      margin-top: 4px;
-    }
-
-    .btn-toggle.active {
-      background: var(--success-green);
-      border-color: var(--success-green);
-      color: #FFFFFF;
-      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.35);
-    }
-
-    .dock-footer {
-      padding: 20px clamp(16px, 3vw, 24px);
-      background: var(--slate-50);
-      border-top: 1px solid var(--slate-200);
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-between;
-      align-items: center;
-      gap: 16px;
-    }
-
-    .status-text { font-size: 13px; font-weight: 600; color: var(--slate-600); }
-
-    .btn-submit {
-      background: linear-gradient(135deg, var(--primary-red) 0%, var(--primary-red-hover) 100%);
-      color: #FFFFFF;
-      border: none;
-      padding: 14px 36px;
-      font-size: 15px;
-      font-weight: 800;
-      border-radius: var(--radius-md);
-      cursor: pointer;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      box-shadow: 0 4px 14px rgba(227, 24, 55, 0.35);
-      transition: all 0.2s ease;
-      width: 100%;
-      max-width: 280px;
-    }
-
-    .btn-submit:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(227, 24, 55, 0.45); }
-
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
-
-    @media (max-width: 960px) {
-      .item-card { grid-template-columns: 36px 1fr; gap: 10px; padding: 16px; }
-      .item-desc, .remark-field, .photo-field, .btn-toggle { grid-column: 1 / -1; }
-    }
-
-    @media (max-width: 600px) {
-      .dock-footer { flex-direction: column; text-align: center; }
-      .btn-submit { max-width: 100%; }
-      .meter-container { width: 100%; }
-      .score-summary-bar { flex-direction: column; align-items: stretch; }
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AM/NS INDIA Pune - Area Incharge 5S Checklist</title>
+<style>
+:root{--red:#E31837;--red-h:#C1121F;--s50:#F8FAFC;--s100:#F1F5F9;--s200:#E2E8F0;--s600:#475569;--s800:#1E293B;--green:#10B981;--amber:#F59E0B;--rl:16px;--rm:10px;--sh:0 4px 6px -1px rgba(0,0,0,.05);--shl:0 20px 25px -5px rgba(0,0,0,.1),0 10px 10px -5px rgba(0,0,0,.04)}
+*{box-sizing:border-box;font-family:'Segoe UI',system-ui,-apple-system,sans-serif;margin:0;padding:0}
+body{background:linear-gradient(135deg,#0F172A,#1E293B);color:var(--s800);min-height:100vh;padding:clamp(10px,3vw,30px);display:flex;justify-content:center;align-items:flex-start}
+.main-wrapper{width:100%;max-width:1250px;background:rgba(255,255,255,.96);border-radius:var(--rl);box-shadow:var(--shl);overflow:hidden;animation:fadeIn .4s ease-out}
+.app-header{background:linear-gradient(135deg,#1E293B,#0F172A);padding:clamp(16px,4vw,28px);color:#fff;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:16px;border-bottom:4px solid var(--red)}
+.header-brand h1{font-size:clamp(20px,4vw,28px);font-weight:800;background:linear-gradient(90deg,#fff,#CBD5E1);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.header-brand p{color:#94A3B8;font-size:clamp(12px,2vw,14px);margin-top:4px}
+.logo-badge{background:rgba(227,24,55,.15);border:1px solid var(--red);padding:8px 16px;border-radius:30px;text-align:right}
+.logo-badge .company{font-weight:900;font-size:20px;color:var(--red);line-height:1}
+.logo-badge .sub{font-size:10px;color:#fff;letter-spacing:2px}
+.audit-meta-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;padding:clamp(16px,3vw,24px);background:var(--s50);border-bottom:1px solid var(--s200)}
+.input-field{display:flex;flex-direction:column;gap:6px}
+.input-field label{font-size:11px;font-weight:700;color:var(--s600);text-transform:uppercase;letter-spacing:.5px}
+.input-field input,.input-field select{padding:12px 14px;border:1px solid var(--s200);border-radius:var(--rm);font-size:14px;background:#fff;color:var(--s800);box-shadow:var(--sh)}
+.input-field input:focus,.input-field select:focus{outline:none;border-color:var(--red);box-shadow:0 0 0 3px rgba(227,24,55,.15)}
+.score-summary-bar{padding:16px clamp(16px,3vw,24px);background:#fff;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:16px;border-bottom:1px solid var(--s200)}
+.score-info{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.score-info-title{font-size:15px;font-weight:700}
+.meter-container{width:200px;height:10px;background:var(--s100);border-radius:20px;overflow:hidden;border:1px solid var(--s200)}
+.meter-fill{height:100%;width:0;background:var(--red);transition:width .4s,background-color .4s}
+.score-pill{font-size:20px;font-weight:900;color:#fff;background:var(--red);padding:6px 18px;border-radius:30px;box-shadow:var(--sh);transition:background-color .3s}
+.score-count{font-size:12px;color:var(--s600);font-weight:600}
+.audit-body{padding:clamp(16px,3vw,24px)}
+.category-section{margin-bottom:28px;background:#fff;border:1px solid var(--s200);border-radius:var(--rm);overflow:hidden;box-shadow:var(--sh)}
+.category-title{background:var(--s800);color:#fff;padding:12px 20px;font-size:14px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;display:flex;align-items:center;gap:10px}
+.category-title::before{content:'';width:8px;height:8px;background:var(--red);border-radius:50%}
+.category-title.common{background:var(--red)}
+.category-title.common::before{background:#fff}
+.item-card{display:grid;grid-template-columns:45px 1.2fr 1.8fr 1.2fr 2fr 130px;align-items:start;gap:14px;padding:16px 20px;border-bottom:1px solid var(--s100)}
+.item-card:last-child{border-bottom:none}
+.item-card:hover{background:#FAF5F5}
+.item-index{font-weight:800;color:var(--red);font-size:13px;background:var(--s100);width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;margin-top:4px}
+.item-name{font-weight:700;font-size:14px;margin-top:6px}
+.item-desc{font-size:13px;color:var(--s600);line-height:1.4;margin-top:6px}
+.remark-field{margin-top:4px}
+.remark-field input{width:100%;padding:8px 10px;font-size:12px;border:1px solid var(--s200);border-radius:6px;background:#fff;color:var(--s800)}
+.photo-field{display:flex;flex-direction:column;gap:6px;margin-top:4px}
+.photo-field>label{font-size:10px;font-weight:800;color:var(--s600);text-transform:uppercase}
+.photo-controls{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.btn-select-photo{background:var(--s800);color:#fff;padding:6px 12px;font-size:11px;font-weight:700;border-radius:6px;cursor:pointer}
+.btn-upload-confirm{background:var(--s600);color:#fff;border:none;padding:6px 12px;font-size:11px;font-weight:700;border-radius:6px;cursor:pointer}
+.btn-upload-confirm.uploaded{background:var(--green)}
+.preview-container{display:flex;flex-wrap:wrap;gap:6px;margin-top:4px}
+.preview-thumb{position:relative;width:50px;height:50px;border-radius:6px;overflow:hidden;border:1px solid var(--s200)}
+.preview-thumb img{width:100%;height:100%;object-fit:cover}
+.preview-thumb .remove-btn{position:absolute;top:2px;right:2px;background:rgba(227,24,55,.85);color:#fff;border:none;border-radius:50%;width:16px;height:16px;font-size:10px;line-height:16px;cursor:pointer}
+.btn-toggle{width:100%;padding:10px 12px;border-radius:30px;border:2px solid var(--s200);background:#fff;color:var(--s600);font-weight:800;font-size:11px;cursor:pointer;transition:all .25s;box-shadow:var(--sh);margin-top:4px}
+.btn-toggle.active{background:var(--green);border-color:var(--green);color:#fff;box-shadow:0 4px 12px rgba(16,185,129,.35)}
+.dock-footer{padding:20px clamp(16px,3vw,24px);background:var(--s50);border-top:1px solid var(--s200);display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:16px}
+.status-text{font-size:13px;font-weight:600;color:var(--s600)}
+.btn-submit{background:linear-gradient(135deg,var(--red),var(--red-h));color:#fff;border:none;padding:14px 36px;font-size:15px;font-weight:800;border-radius:var(--rm);cursor:pointer;text-transform:uppercase;box-shadow:0 4px 14px rgba(227,24,55,.35);width:100%;max-width:280px}
+.btn-submit:disabled{opacity:.6;cursor:not-allowed}
+@keyframes fadeIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+@media(max-width:960px){.item-card{grid-template-columns:36px 1fr;gap:10px;padding:16px}.item-desc,.remark-field,.photo-field,.btn-toggle{grid-column:1/-1}}
+@media(max-width:600px){.dock-footer{flex-direction:column;text-align:center}.btn-submit{max-width:100%}.meter-container{width:100%}.score-summary-bar{flex-direction:column;align-items:stretch}}
+</style>
 </head>
 <body>
-
 <div class="main-wrapper">
   <header class="app-header">
     <div class="header-brand">
       <h1>AM/NS INDIA — Pune Facility</h1>
-      <p>Area / Department Incharge 5S Review & Compliance Checklist</p>
+      <p>Area / Department Incharge 5S Review &amp; Compliance Checklist (1S – 5S)</p>
     </div>
-    <div class="logo-badge">
-      <div class="company">AM/NS</div>
-      <div class="sub">INDIA</div>
-    </div>
+    <div class="logo-badge"><div class="company">AM/NS</div><div class="sub">INDIA</div></div>
   </header>
 
-  <!-- Section for Metadata including Reviewer SAP ID & Email ID -->
   <section class="audit-meta-grid">
-    <div class="input-field">
-      <label for="reviewNo">Review Cycle / No.</label>
-      <input type="text" id="reviewNo" value="Review Cycle 1" placeholder="e.g. Review Cycle 1">
-    </div>
-    <div class="input-field">
-      <label for="auditDate">Review Date</label>
-      <input type="date" id="auditDate">
-    </div>
+    <div class="input-field"><label for="reviewNo">Review Cycle / No.</label><input type="text" id="reviewNo" value="Review Cycle 1"></div>
+    <div class="input-field"><label for="auditDate">Review Date</label><input type="date" id="auditDate"></div>
     <div class="input-field">
       <label for="zone">Department / Zone Selection</label>
       <select id="zone" onchange="renderChecklist()">
-        <optgroup label="Plant & Production Zones">
+        <optgroup label="Plant &amp; Production Zones">
           <option value="CGL -1">CGL -1</option>
           <option value="CGL -2">CGL -2</option>
           <option value="N2-H2 GAS PLANT">N2-H2 GAS PLANT</option>
@@ -416,7 +95,7 @@
           <option value="UTILITY">UTILITY</option>
           <option value="CIVIL">CIVIL</option>
         </optgroup>
-        <optgroup label="Office & Administrative Zones">
+        <optgroup label="Office &amp; Administrative Zones">
           <option value="MAIN OFFICE">MAIN OFFICE</option>
           <option value="HR DEPARTMENT">HR DEPARTMENT</option>
           <option value="FINANCE DEPARTMENT">FINANCE DEPARTMENT</option>
@@ -424,26 +103,16 @@
         </optgroup>
       </select>
     </div>
-    <div class="input-field">
-      <label for="incharge">REVIEWER Name</label>
-      <input type="text" id="incharge" placeholder="Enter Reviewer Name">
-    </div>
-    <div class="input-field">
-      <label for="reviewerSap">Reviewer SAP ID</label>
-      <input type="text" id="reviewerSap" placeholder="e.g. 10023456">
-    </div>
-    <div class="input-field">
-      <label for="reviewerEmail">Reviewer Mail ID</label>
-      <input type="email" id="reviewerEmail" placeholder="reviewer@amnsin.com">
-    </div>
+    <div class="input-field"><label for="incharge">REVIEWER Name</label><input type="text" id="incharge" placeholder="Enter Reviewer Name"></div>
+    <div class="input-field"><label for="reviewerSap">Reviewer SAP ID</label><input type="text" id="reviewerSap" placeholder="e.g. 10023456"></div>
+    <div class="input-field"><label for="reviewerEmail">Reviewer Mail ID</label><input type="email" id="reviewerEmail" placeholder="reviewer@amnsin.com"></div>
   </section>
 
   <section class="score-summary-bar">
     <div class="score-info">
       <span class="score-info-title">5S Compliance Verification Score</span>
-      <div class="meter-container">
-        <div class="meter-fill" id="meterFill"></div>
-      </div>
+      <div class="meter-container"><div class="meter-fill" id="meterFill"></div></div>
+      <span class="score-count" id="scoreCount">0 / 23 verified</span>
     </div>
     <div class="score-pill" id="scoreDisplay">0%</div>
   </section>
@@ -452,325 +121,376 @@
 
   <footer class="dock-footer">
     <div class="status-text" id="statusMessage">● Ready for Verification</div>
-    <button class="btn-submit" onclick="submitAssessment()">Submit Review</button>
+    <button class="btn-submit" id="submitBtn" onclick="submitAssessment()">Submit Review</button>
   </footer>
 </div>
 
+<div id="camModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:99;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:12px;">
+  <video id="camVideo" autoplay playsinline muted style="max-width:100%;max-height:70vh;border-radius:10px;"></video>
+  <div id="camInfo" style="color:#fff;font-size:13px;font-weight:600;"></div>
+  <div style="display:flex;gap:10px;"><button class="btn-submit" style="max-width:170px;" onclick="snapPhoto()">📸 Capture</button><button class="btn-upload-confirm" style="padding:12px 24px;font-size:13px;" onclick="closeCamera()">Done</button></div>
+</div>
+
 <script>
-  document.getElementById('auditDate').valueAsDate = new Date();
+document.getElementById('auditDate').valueAsDate = new Date();
 
-  // Power Automate HTTP POST Trigger Endpoint
-  const POWER_AUTOMATE_URL = 'https://default37cd273a1cec4aaea29741480ea54f.8d.environment.api.powerplatform.com:443/powerautomate/automations/direct/cu/11/workflows/1266e8a9f7e64c4d9eb4149a283d413f/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=W1NIdQ-1aotVVL0F6YwUOv8Mw7jmU_X6hBjyjAsPS9k';
+// Power Automate HTTP POST Trigger Endpoint
+const POWER_AUTOMATE_URL = 'https://default37cd273a1cec4aaea29741480ea54f.8d.environment.api.powerplatform.com:443/powerautomate/automations/direct/cu/11/workflows/1266e8a9f7e64c4d9eb4149a283d413f/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=W1NIdQ-1aotVVL0F6YwUOv8Mw7jmU_X6hBjyjAsPS9k';
 
-  // Store uploaded image files per item ID (up to 10 photos optional)
-  const itemPhotos = {};
+const itemPhotos = {};
 
-  const checklistData = {
-    plant: {
-      s1: [
-        { id: "1s_1", name: "Unused Material & Scrap", desc: "Verify no scrap, broken pallets, or defective coils accumulate in active plant zones." },
-        { id: "1s_2", name: "Red Tag Holding Area", desc: "Ensure non-moving machinery spare parts or tagged items are properly logged in the Red Tag Zone." },
-        { id: "1s_3", name: "Material & Raw Coil Sorting", desc: "Verify active production coils and consumables are separated from non-active stock." },
-        { id: "1s_4", name: "Clear Gangways & Exits", desc: "Ensure no temporary maintenance tools or scrap block crane routes or emergency exits." },
-        { id: "1s_5", name: "Weekly 1S Training (Mandatory)", desc: "Verify weekly 1S training/toolbox talk on sorting and red-tagging was conducted for plant staff." }
-      ],
-      s2: [
-        { id: "2s_1", name: "Name Plates & Equipment Tags", desc: "Check that all machinery, valves, panels, and chemical/oil drums have legible identification tags." },
-        { id: "2s_2", name: "Shadow Boards & Tool Racks", desc: "Ensure maintenance and operational tools are stored on designated shadow boards when not in use." },
-        { id: "2s_3", name: "Floor Demarcation Lines", desc: "Verify yellow/red boundary lines for coil storage, crane drop zones, and walkways are intact." },
-        { id: "2s_4", name: "Min/Max Storage Visual Controls", desc: "Check min/max visual stock indicators and pressure/temperature range markings." },
-        { id: "2s_5", name: "Weekly 2S Training (Mandatory)", desc: "Verify weekly 2S training was conducted on visual controls, tagging, and tool organization." }
-      ],
-      s3: [
-        { id: "3s_1", name: "Routine Floor & Area Sweeping", desc: "Confirm regular shift sweeping, trash disposal, and general cleanliness of plant floor." },
-        { id: "3s_2", name: "Oil Leakage & Spill Control", desc: "Inspect hydraulic rooms and oil cellars for leakage; ensure immediate cleanup and drip tray placement." },
-        { id: "3s_3", name: "Equipment & Desk Cleanliness", desc: "Verify operator desks, pulpit glass, and control panels are clean of industrial dust and grease." },
-        { id: "3s_4", name: "Cleanliness as Inspection", desc: "Verify operators check for loose bolts, cracks, or wear while performing cleaning routines." },
-        { id: "3s_5", name: "Weekly 3S Training (Mandatory)", desc: "Verify weekly 3S training was conducted on cleaning standards, spill control, and equipment care." }
-      ]
-    },
-    office: {
-      s1: [
-        { id: "1s_1", name: "Paper & File Archiving", desc: "Verify redundant documents, outdated printouts, and scrap paper are shredded/binned." },
-        { id: "1s_2", name: "Unused Hardware & E-Waste", desc: "Ensure broken monitors, cables, and old IT assets are red-tagged and sent to store." },
-        { id: "1s_3", name: "Desk Surface Sorting", desc: "Ensure only active work files and current work items are present on office desks." },
-        { id: "1s_4", name: "Clear Passageways & Doors", desc: "Verify office walkways, fire extinguishers, and electrical control DBs are completely unobstructed." },
-        { id: "1s_5", name: "Weekly 1S Training (Mandatory)", desc: "Verify weekly 1S office training was conducted on digital/physical sorting and decluttering." }
-      ],
-      s2: [
-        { id: "2s_1", name: "File Cabinet & Tray Labeling", desc: "Check that all physical file binders, drawers, and document trays have clear name tags." },
-        { id: "2s_2", name: "Stationery Shadow/Storage Trays", desc: "Verify stationery items (pens, staplers, stamps) have designated storage spots." },
-        { id: "2s_3", name: "Cable Management & Wiring", desc: "Ensure computer power cables, LAN cables, and extension cords are tied and route-managed." },
-        { id: "2s_4", name: "Digital File Organization", desc: "Verify shared drive folders follow standardized naming conventions and file structures." },
-        { id: "2s_5", name: "Weekly 2S Training (Mandatory)", desc: "Verify weekly 2S training conducted on document indexing and visual office standards." }
-      ],
-      s3: [
-        { id: "3s_1", name: "Daily Office Housekeeping", desc: "Verify desk dusting, floor mopping, and waste bin emptying are executed daily." },
-        { id: "3s_2", name: "IT Equipment Cleanliness", desc: "Ensure computer screens, keyboards, printers, and copiers are clean and dust-free." },
-        { id: "3s_3", name: "Pantry & Common Area Hygiene", desc: "Check pantry, coffee machine area, and conference rooms for neatness and clean surfaces." },
-        { id: "3s_4", name: "Clean Desk Policy Compliance", desc: "Ensure desks are left completely clean and clear of sensitive documents at shift end." },
-        { id: "3s_5", name: "Weekly 3S Training (Mandatory)", desc: "Verify weekly 3S training conducted on maintaining office hygiene and sanitization." }
-      ]
+/* 23 points: 1S-3S = 5 each, 4S = 4, 5S = 4 (incl. training). Plant / Office differ. */
+const checklistData = {
+  plant: {
+    s1: [
+      { id: "1s_1", name: "Unused Material & Scrap", desc: "Verify no scrap, broken pallets, or defective coils accumulate in active plant zones." },
+      { id: "1s_2", name: "Red Tag Holding Area", desc: "Ensure non-moving machinery spare parts or tagged items are properly kept in the Red Tag Zone." },
+      { id: "1s_3", name: "Material & Raw Coil Sorting", desc: "Verify active production coils and consumables are separated from non-active stock." },
+      { id: "1s_4", name: "Clear Gangways & Exits", desc: "Ensure no temporary maintenance tools or scrap block crane routes or emergency exits." },
+      { id: "1s_5", name: "Red-Tag Portal Logging & Disposal", desc: "Verify all red-tagged items are logged in the Red-Tag portal and disposed/segregated as per action plan." }
+    ],
+    s2: [
+      { id: "2s_1", name: "Name Plates & Equipment Tags", desc: "Check that all machinery, valves, panels, and chemical/oil drums have legible identification tags." },
+      { id: "2s_2", name: "Shadow Boards & Tool Racks", desc: "Ensure maintenance and operational tools are stored on designated shadow boards when not in use." },
+      { id: "2s_3", name: "Floor Demarcation Lines", desc: "Verify yellow/red boundary lines for coil storage, crane drop zones, and walkways are intact." },
+      { id: "2s_4", name: "Min/Max Storage Visual Controls", desc: "Check min/max visual stock indicators and pressure/temperature range markings." },
+      { id: "2s_5", name: "FIFO Compliance", desc: "Verify date stickers/rotation markers and first-in-first-out discipline for stored materials and consumables." }
+    ],
+    s3: [
+      { id: "3s_1", name: "Routine Floor & Area Sweeping", desc: "Confirm regular shift sweeping, trash disposal, and general cleanliness of plant floor." },
+      { id: "3s_2", name: "Oil Leakage & Spill Control", desc: "Inspect hydraulic rooms and oil cellars for leakage; ensure immediate cleanup and drip tray placement." },
+      { id: "3s_3", name: "Equipment & Desk Cleanliness", desc: "Verify operator desks, pulpit glass, and control panels are clean of industrial dust and grease." },
+      { id: "3s_4", name: "Cleanliness as Inspection", desc: "Verify operators check for loose bolts, cracks, or wear while performing cleaning routines." },
+      { id: "3s_5", name: "Defect Log & Maintenance Tickets", desc: "Verify defects found during cleaning are recorded in the Defect Log and maintenance tickets are raised/closed." }
+    ],
+    s4: [
+      { id: "4s_1", name: "Visual Management Boards", desc: "Check 5S boards with zone map, before/after photos, and area scores are displayed and updated." },
+      { id: "4s_2", name: "Cleaning Checklist & Responsibility Matrix", desc: "Verify 5S cleaning checklist and responsibility matrix are posted with named owners and daily sign-off." },
+      { id: "4s_3", name: "Colour Coding (Pipes & Dustbins)", desc: "Ensure pipelines, dustbins, and zones follow the standard colour coding." },
+      { id: "4s_4", name: "Safety & Emergency Visuals", desc: "Verify emergency contacts, evacuation routes, assembly points, and PPE signage are visible and intact." },
+    ],
+    s5: [
+      { id: "5s_1", name: "Monthly Internal Audit On Schedule", desc: "Verify monthly internal 5S audit was completed on schedule with completed forms." },
+      { id: "5s_2", name: "Corrective Action & Re-audit", desc: "Confirm actions are closed for any S scoring below 90% and re-audit is done within 2 weeks." },
+      { id: "5s_5", name: "New Joiner 5S Induction", desc: "Verify new associates are trained on area-specific 5S standards within their first week." },
+      { id: "5s_train", training: true, name: "Weekly 5S Training (Mandatory — 1S to 5S)", desc: "Verify weekly 5S training / toolbox talk covering Sort, Set in Order, Shine, Standardize and Sustain was conducted. Upload attendance sheet photo and training photos." }
+    ]
+  },
+  office: {
+    s1: [
+      { id: "1s_1", name: "Paper & File Archiving", desc: "Verify redundant documents, outdated printouts, and scrap paper are shredded/binned." },
+      { id: "1s_2", name: "Unused Hardware & E-Waste", desc: "Ensure broken monitors, cables, and old IT assets are red-tagged and sent to store." },
+      { id: "1s_3", name: "Desk Surface Sorting", desc: "Ensure only active work files and current work items are present on office desks." },
+      { id: "1s_4", name: "Clear Passageways & Doors", desc: "Verify office walkways, fire extinguishers, and electrical control DBs are completely unobstructed." },
+      { id: "1s_5", name: "Red-Tag Portal Logging & Disposal", desc: "Verify unwanted items are red-tagged, logged in the Red-Tag portal, and disposed/segregated (e-waste, paper, etc.)." }
+    ],
+    s2: [
+      { id: "2s_1", name: "File Cabinet & Tray Labeling", desc: "Check that all physical file binders, drawers, and document trays have clear name tags." },
+      { id: "2s_2", name: "Stationery Shadow/Storage Trays", desc: "Verify stationery items (pens, staplers, stamps) have designated storage spots." },
+      { id: "2s_3", name: "Cable Management & Wiring", desc: "Ensure computer power cables, LAN cables, and extension cords are tied and route-managed." },
+      { id: "2s_4", name: "Digital File Organization", desc: "Verify shared drive folders follow standardized naming conventions and file structures." },
+      { id: "2s_5", name: "FIFO & Stock Control", desc: "Verify stationery/consumable stock follows FIFO with min/max levels and dated records." }
+    ],
+    s3: [
+      { id: "3s_1", name: "Daily Office Housekeeping", desc: "Verify desk dusting, floor mopping, and waste bin emptying are executed daily." },
+      { id: "3s_2", name: "IT Equipment Cleanliness", desc: "Ensure computer screens, keyboards, printers, and copiers are clean and dust-free." },
+      { id: "3s_3", name: "Pantry & Common Area Hygiene", desc: "Check pantry, coffee machine area, and conference rooms for neatness and clean surfaces." },
+      { id: "3s_4", name: "Clean Desk Policy Compliance", desc: "Ensure desks are left completely clean and clear of sensitive documents at shift end." },
+      { id: "3s_5", name: "Defect Reporting & Tickets", desc: "Verify faults (lights, AC, furniture, IT, leaks) are reported via tickets and tracked to closure." }
+    ],
+    s4: [
+      { id: "4s_1", name: "Visual Management Boards", desc: "Check 5S board with area map, before/after photos, and scores is displayed and updated." },
+      { id: "4s_2", name: "Cleaning Checklist & Responsibility Matrix", desc: "Verify office cleaning checklist and 5S responsibility matrix are posted with named owners." },
+      { id: "4s_3", name: "Colour Coding (Dustbins & Zones)", desc: "Ensure dustbins and zones follow the standard colour coding for waste segregation." },
+      { id: "4s_4", name: "Safety & Emergency Visuals", desc: "Verify emergency contacts, evacuation routes, assembly points, and fire equipment signage are visible." },
+    ],
+    s5: [
+      { id: "5s_1", name: "Monthly Internal Audit On Schedule", desc: "Verify monthly internal 5S audit was completed on schedule with completed forms." },
+      { id: "5s_2", name: "Corrective Action & Re-audit", desc: "Confirm actions are closed for any S scoring below 90% and re-audit is done within 2 weeks." },
+      { id: "5s_5", name: "New Joiner 5S Induction", desc: "Verify new associates are trained on office 5S standards within their first week." },
+      { id: "5s_train", training: true, name: "Weekly 5S Training (Mandatory — 1S to 5S)", desc: "Verify weekly 5S training / toolbox talk covering Sort, Set in Order, Shine, Standardize and Sustain was conducted. Upload attendance sheet photo and training photos." }
+    ]
+  }
+};
+
+const OFFICE_ZONES = ["MAIN OFFICE", "HR DEPARTMENT", "FINANCE DEPARTMENT", "PROJECTS OFFICE"];
+const isOfficeZone = z => OFFICE_ZONES.includes(z);
+const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+function photoBlock(id, label, mode) {
+  const pick = mode === 'live'
+    ? `<button type="button" class="btn-select-photo" style="border:none;" onclick="openCamera('${id}')">📷 Live Capture</button>`
+    : `<label class="btn-select-photo" for="file_${id}">🖼️ Select from Gallery</label>
+       <input type="file" id="file_${id}" accept="image/*" multiple style="display:none;" onchange="handleImageSelection('${id}', this)">`;
+  return `<div class="photo-field">
+    <label>${label}</label>
+    <div class="photo-controls">${pick}
+      <button type="button" class="btn-upload-confirm" id="btn_upload_${id}" onclick="confirmUpload('${id}')">Upload Final</button>
+    </div>
+    <div class="preview-container" id="preview_${id}"></div>
+  </div>`;
+}
+
+/* Live camera capture (no gallery) */
+let camStream = null, camItem = null;
+function updateCamInfo() { document.getElementById('camInfo').innerText = `Captured: ${itemPhotos[camItem].length} / 10`; }
+async function openCamera(id) {
+  if (itemPhotos[id].length >= 10) { alert('Maximum 10 photos reached.'); return; }
+  if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) { alert('Live camera is not available (HTTPS and camera permission required).'); return; }
+  try {
+    camStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: { ideal: 'environment' } }, audio: false });
+    camItem = id;
+    document.getElementById('camVideo').srcObject = camStream;
+    document.getElementById('camModal').style.display = 'flex';
+    updateCamInfo();
+  } catch (e) { alert('Camera access denied or unavailable.'); }
+}
+function snapPhoto() {
+  const v = document.getElementById('camVideo');
+  if (!v.videoWidth) return;
+  if (itemPhotos[camItem].length >= 10) { alert('Maximum 10 photos reached.'); return; }
+  const c = document.createElement('canvas');
+  c.width = v.videoWidth; c.height = v.videoHeight;
+  c.getContext('2d').drawImage(v, 0, 0);
+  c.toBlob(b => {
+    itemPhotos[camItem].push(new File([b], `live_${Date.now()}.jpg`, { type: 'image/jpeg' }));
+    renderPreviews(camItem); resetUploadBtn(camItem); updateCamInfo();
+  }, 'image/jpeg', 0.8);
+}
+function closeCamera() {
+  if (camStream) camStream.getTracks().forEach(t => t.stop());
+  camStream = null;
+  document.getElementById('camModal').style.display = 'none';
+}
+
+async function imgsHtml(files) {
+  let h = '';
+  for (const f of (files || [])) {
+    const b64 = await processAndResizeImage(f);
+    if (b64) h += `<img src="${b64}" style="width:75px;height:75px;object-fit:cover;border-radius:4px;margin-right:4px;margin-bottom:4px;border:1px solid #ccc;"/>`;
+  }
+  return h;
+}
+
+function renderChecklist() {
+  const type = isOfficeZone(document.getElementById('zone').value) ? 'office' : 'plant';
+  const data = checklistData[type];
+  const categories = [
+    { key: "1S", title: "1S — SORT (SEIRI) — Area Verification", items: data.s1 },
+    { key: "2S", title: "2S — SET IN ORDER (SEITON) — Area Verification", items: data.s2 },
+    { key: "3S", title: "3S — SHINE (SEISO) — Area Verification", items: data.s3 },
+    { key: "4S", title: "4S — STANDARDIZE (SEIKETSU) — Area Verification", items: data.s4 },
+    { key: "5S", title: "5S — SUSTAIN (SHITSUKE) — Area Verification", items: data.s5 }
+  ];
+
+  let html = '', n = 1;
+  categories.forEach(cat => {
+    html += `<div class="category-section"><div class="category-title">${cat.title}</div><div class="checklist-items">`;
+    cat.items.forEach(item => {
+      [item.id,'train_att','train_pic'].forEach(k => { itemPhotos[k] = itemPhotos[k] || []; });
+      html += `
+        <div class="item-card" data-id="${item.id}" data-cat="${cat.key}" ${item.training ? 'data-training="1"' : ''}>
+          <div class="item-index">${n++}</div>
+          <div class="item-name">${item.name}</div>
+          <div class="item-desc">${item.desc}</div>
+          <div class="remark-field"><input type="text" class="item-remark" placeholder="Remark (Optional)"></div>
+          ${item.training
+            ? photoBlock('train_att','Attendance Sheet Photos (Upload from Gallery)','gallery') + photoBlock('train_pic','Training Given Photos (Upload from Gallery)','gallery')
+            : photoBlock(item.id,'Photos (Optional - Up to 10) — Live Capture Only','live')}
+          <button class="btn-toggle" onclick="toggleStatus(this)">NOT COMPLIANT</button>
+        </div>`;
+    });
+    html += `</div></div>`;
+  });
+  document.getElementById('checklistContainer').innerHTML = html;
+  updateScoreMeter();
+}
+
+function resetUploadBtn(itemId) {
+  const b = document.getElementById(`btn_upload_${itemId}`);
+  b.classList.remove('uploaded');
+  b.innerText = 'Upload Final';
+}
+
+function handleImageSelection(itemId, input) {
+  if (!input.files || !input.files.length) return;
+  Array.from(input.files).forEach(f => { if (itemPhotos[itemId].length < 10) itemPhotos[itemId].push(f); });
+  input.value = '';
+  renderPreviews(itemId);
+  resetUploadBtn(itemId);
+}
+
+function renderPreviews(itemId) {
+  const box = document.getElementById(`preview_${itemId}`);
+  box.innerHTML = '';
+  itemPhotos[itemId].forEach((file, i) => {
+    const thumb = document.createElement('div');
+    thumb.className = 'preview-thumb';
+    const img = document.createElement('img');
+    img.src = URL.createObjectURL(file);
+    const rm = document.createElement('button');
+    rm.className = 'remove-btn';
+    rm.innerText = '✕';
+    rm.onclick = () => removeImage(itemId, i);
+    thumb.appendChild(img);
+    thumb.appendChild(rm);
+    box.appendChild(thumb);
+  });
+}
+
+function removeImage(itemId, index) {
+  itemPhotos[itemId].splice(index, 1);
+  renderPreviews(itemId);
+  resetUploadBtn(itemId);
+}
+
+function confirmUpload(itemId) {
+  const count = itemPhotos[itemId] ? itemPhotos[itemId].length : 0;
+  if (!count) { alert("No images selected for this point."); return; }
+  const b = document.getElementById(`btn_upload_${itemId}`);
+  b.classList.add('uploaded');
+  b.innerText = `✓ ${count} Uploaded`;
+}
+
+function toggleStatus(btn) {
+  btn.classList.toggle('active');
+  btn.innerText = btn.classList.contains('active') ? '✓ VERIFIED' : 'NOT COMPLIANT';
+  updateScoreMeter();
+}
+
+function updateScoreMeter() {
+  const buttons = document.querySelectorAll('.btn-toggle');
+  if (!buttons.length) return { score: 0, activeCount: 0, total: 0 };
+  let active = 0;
+  buttons.forEach(b => { if (b.classList.contains('active')) active++; });
+  const score = Math.round((active / buttons.length) * 100);
+  const pill = document.getElementById('scoreDisplay');
+  const fill = document.getElementById('meterFill');
+  pill.innerText = score + '%';
+  fill.style.width = score + '%';
+  document.getElementById('scoreCount').innerText = `${active} / ${buttons.length} verified`;
+  // SOP target: >= 90% per S level
+  const color = score >= 90 ? '#10B981' : score >= 50 ? '#F59E0B' : '#E31837';
+  pill.style.background = color;
+  fill.style.background = color;
+  return { activeCount: active, total: buttons.length, score };
+}
+
+function processAndResizeImage(file) {
+  return new Promise(resolve => {
+    if (!file) return resolve(null);
+    const reader = new FileReader();
+    reader.onload = e => {
+      const img = new Image();
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        let w = img.width, h = img.height;
+        const max = 600;
+        if (w > h && w > max) { h *= max / w; w = max; }
+        else if (h > max) { w *= max / h; h = max; }
+        canvas.width = w; canvas.height = h;
+        canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+        resolve(canvas.toDataURL('image/jpeg', 0.5));
+      };
+      img.onerror = () => resolve(null);
+      img.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
+async function submitAssessment() {
+  const statusMsg = document.getElementById('statusMessage');
+  const btn = document.getElementById('submitBtn');
+  btn.disabled = true;
+  const scoreData = updateScoreMeter();
+  const rows = document.querySelectorAll('.item-card');
+  statusMsg.innerHTML = '<span style="color:#F59E0B;">⏳ Processing images & building PDF report...</span>';
+
+  const reviewNo = document.getElementById('reviewNo').value;
+  const auditDate = document.getElementById('auditDate').value;
+  const zone = document.getElementById('zone').value;
+  const incharge = document.getElementById('incharge').value || 'N/A';
+  const reviewerSap = document.getElementById('reviewerSap').value || 'N/A';
+  const reviewerEmail = document.getElementById('reviewerEmail').value || 'N/A';
+
+  let tableRowsHtml = '', idx = 1, lastCat = '';
+  const sTotals = {};
+  const catLabel = { "1S":"1S — Sort","2S":"2S — Set in Order","3S":"3S — Shine","4S":"4S — Standardize","5S":"5S — Sustain","TRAINING":"Common — 5S Training" };
+
+  for (const row of rows) {
+    const itemId = row.getAttribute('data-id');
+    const cat = row.getAttribute('data-cat');
+    const name = row.querySelector('.item-name').innerText;
+    const isDone = row.querySelector('.btn-toggle').classList.contains('active');
+    const remarkVal = esc(row.querySelector('.item-remark').value || 'N/A');
+    const files = itemPhotos[itemId] || [];
+
+    sTotals[cat] = sTotals[cat] || { ok: 0, total: 0 };
+    sTotals[cat].total++;
+    if (isDone) sTotals[cat].ok++;
+
+    let imagesHtml = '';
+    if (row.getAttribute('data-training')) {
+      imagesHtml = '<b>Attendance Sheet:</b><br>' + ((await imgsHtml(itemPhotos.train_att)) || 'No Image') + '<br><b>Training Photos:</b><br>' + ((await imgsHtml(itemPhotos.train_pic)) || 'No Image');
+    } else {
+      imagesHtml = await imgsHtml(files);
     }
+
+    if (cat !== lastCat) {
+      tableRowsHtml += `<tr><td colspan="5" style="padding:6px 8px;background:#E2E8F0;font-weight:bold;border:1px solid #CBD5E1;">${catLabel[cat]}</td></tr>`;
+      lastCat = cat;
+    }
+    const badge = isDone
+      ? '<span style="color:#10B981;font-weight:bold;">✓ VERIFIED</span>'
+      : '<span style="color:#E31837;font-weight:bold;">NOT COMPLIANT</span>';
+    tableRowsHtml += `<tr>
+      <td style="padding:8px;border:1px solid #CBD5E1;text-align:center;">${idx++}</td>
+      <td style="padding:8px;border:1px solid #CBD5E1;">${name}</td>
+      <td style="padding:8px;border:1px solid #CBD5E1;">${badge}</td>
+      <td style="padding:8px;border:1px solid #CBD5E1;">${remarkVal}</td>
+      <td style="padding:8px;border:1px solid #CBD5E1;">${imagesHtml || 'No Image'}</td></tr>`;
+  }
+
+  // Per-S summary
+  const sScores = {};
+  let summaryHtml = '';
+  Object.keys(sTotals).forEach(k => {
+    const t = sTotals[k];
+    const pct = Math.round((t.ok / t.total) * 100);
+    sScores[k] = pct;
+    summaryHtml += `<td style="padding:6px;border:1px solid #E2E8F0;text-align:center;background:#F8FAFC;"><strong>${k === 'TRAINING' ? 'Training' : k}</strong><br><span style="color:${pct >= 90 ? '#10B981' : '#E31837'};font-weight:bold;">${t.ok}/${t.total} (${pct}%)</span></td>`;
+  });
+
+  const fullHtmlReport = `<!DOCTYPE html><html><head><meta charset="utf-8"><style>body{font-family:Arial,sans-serif;margin:20px;color:#1E293B;}.header{background:#0F172A;color:white;padding:15px;border-bottom:4px solid #E31837;}.meta{margin:15px 0;font-size:13px;width:100%;border-collapse:collapse;}.meta td{padding:6px;border:1px solid #E2E8F0;background:#F8FAFC;}table.report-table{width:100%;border-collapse:collapse;font-size:11px;margin-top:10px;}table.report-table th{background:#1E293B;color:white;padding:8px;border:1px solid #CBD5E1;}</style></head><body><div class="header"><h2 style="margin:0;">AM/NS INDIA Pune Facility</h2><p style="margin:4px 0 0 0;font-size:12px;color:#94A3B8;">5S Compliance Review Audit Report (1S – 5S)</p></div><table class="meta"><tr><td><strong>Review Cycle:</strong> ${esc(reviewNo)}</td><td><strong>Date:</strong> ${esc(auditDate)}</td></tr><tr><td><strong>Zone / Dept:</strong> ${esc(zone)}</td><td><strong>Reviewer:</strong> ${esc(incharge)}</td></tr><tr><td><strong>Reviewer SAP ID:</strong> ${esc(reviewerSap)}</td><td><strong>Reviewer Email:</strong> ${esc(reviewerEmail)}</td></tr><tr><td colspan="2"><strong>Overall Compliance Score:</strong> <span style="font-size:16px;font-weight:bold;color:#E31837;">${scoreData.score}%</span> (${scoreData.activeCount}/${scoreData.total})</td></tr></table><table class="meta"><tr>${summaryHtml}</tr></table><table class="report-table"><thead><tr><th style="width:5%;">#</th><th style="width:30%;">Compliance Point</th><th style="width:15%;">Status</th><th style="width:25%;">Remark</th><th style="width:25%;">Captured Photos</th></tr></thead><tbody>${tableRowsHtml}</tbody></table></body></html>`;
+
+  const payload = {
+    facility: 'AM/NS INDIA Pune Facility',
+    reviewNo, date: auditDate, zone, incharge, reviewerSap, reviewerEmail,
+    complianceScore: scoreData.score,
+    verifiedCount: scoreData.activeCount,
+    totalPoints: scoreData.total,
+    sScores: sScores,
+    htmlReport: fullHtmlReport
   };
 
-  function isOfficeZone(zoneValue) {
-    return ["MAIN OFFICE", "HR DEPARTMENT", "FINANCE DEPARTMENT", "PROJECTS OFFICE"].includes(zoneValue);
-  }
-
-  function renderChecklist() {
-    const selectedZone = document.getElementById('zone').value;
-    const type = isOfficeZone(selectedZone) ? 'office' : 'plant';
-    const data = checklistData[type];
-    const container = document.getElementById('checklistContainer');
-
-    let html = '';
-    const categories = [
-      { title: "1S — SORT (SEIRI) — Area Verification", items: data.s1 },
-      { title: "2S — SET IN ORDER (SEITON) — Area Verification", items: data.s2 },
-      { title: "3S — SHINE (SEISO) — Area Verification", items: data.s3 }
-    ];
-
-    let overallIndex = 1;
-    categories.forEach(cat => {
-      html += `<div class="category-section"><div class="category-title">${cat.title}</div><div class="checklist-items">`;
-      cat.items.forEach(item => {
-        // initialize photo array for item
-        itemPhotos[item.id] = itemPhotos[item.id] || [];
-
-        html += `
-          <div class="item-card" data-id="${item.id}">
-            <div class="item-index">${overallIndex++}</div>
-            <div class="item-name">${item.name}</div>
-            <div class="item-desc">${item.desc}</div>
-            <div class="remark-field"><input type="text" class="item-remark" placeholder="Remark (Optional)"></div>
-            <div class="photo-field">
-              <label>Photos (Optional - Up to 10)</label>
-              <div class="photo-controls">
-                <label class="btn-select-photo" for="file_${item.id}">📷 Select / Click</label>
-                <input type="file" id="file_${item.id}" accept="image/*" capture="environment" multiple style="display:none;" onchange="handleImageSelection('${item.id}', this)">
-                <button type="button" class="btn-upload-confirm" id="btn_upload_${item.id}" onclick="confirmUpload('${item.id}')">Upload Final</button>
-              </div>
-              <div class="preview-container" id="preview_${item.id}"></div>
-            </div>
-            <button class="btn-toggle" onclick="toggleStatus(this)">NOT COMPLIANT</button>
-          </div>
-        `;
-      });
-      html += `</div></div>`;
+  try {
+    const response = await fetch(POWER_AUTOMATE_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
     });
-
-    container.innerHTML = html;
-    updateScoreMeter();
+    if (!response.ok) throw new Error('HTTP status ' + response.status);
+    statusMsg.innerHTML = '<span style="color:#10B981;">✓ Review submitted! PDF report is being emailed.</span>';
+  } catch (err) {
+    console.error(err);
+    statusMsg.innerHTML = '<span style="color:#E31837;">✕ Submission failed. Check network connection.</span>';
+  } finally {
+    btn.disabled = false;
   }
+}
 
-  // Handle selected image files and display on-page thumbnails
-  function handleImageSelection(itemId, input) {
-    if (!input.files || input.files.length === 0) return;
-
-    const filesArr = Array.from(input.files);
-    
-    filesArr.forEach(file => {
-      if (itemPhotos[itemId].length < 10) {
-        itemPhotos[itemId].push(file);
-      }
-    });
-
-    // Reset input so re-selecting same file triggers change
-    input.value = '';
-    renderPreviews(itemId);
-
-    // Reset upload button status
-    const uploadBtn = document.getElementById(`btn_upload_${itemId}`);
-    uploadBtn.classList.remove('uploaded');
-    uploadBtn.innerText = 'Upload Final';
-  }
-
-  function renderPreviews(itemId) {
-    const previewBox = document.getElementById(`preview_${itemId}`);
-    previewBox.innerHTML = '';
-
-    itemPhotos[itemId].forEach((file, index) => {
-      const thumb = document.createElement('div');
-      thumb.className = 'preview-thumb';
-
-      const img = document.createElement('img');
-      img.src = URL.createObjectURL(file);
-
-      const removeBtn = document.createElement('button');
-      removeBtn.className = 'remove-btn';
-      removeBtn.innerText = '✕';
-      removeBtn.onclick = () => removeImage(itemId, index);
-
-      thumb.appendChild(img);
-      thumb.appendChild(removeBtn);
-      previewBox.appendChild(thumb);
-    });
-  }
-
-  function removeImage(itemId, index) {
-    itemPhotos[itemId].splice(index, 1);
-    renderPreviews(itemId);
-
-    const uploadBtn = document.getElementById(`btn_upload_${itemId}`);
-    uploadBtn.classList.remove('uploaded');
-    uploadBtn.innerText = 'Upload Final';
-  }
-
-  function confirmUpload(itemId) {
-    const count = itemPhotos[itemId] ? itemPhotos[itemId].length : 0;
-    const uploadBtn = document.getElementById(`btn_upload_${itemId}`);
-
-    if (count === 0) {
-      alert("No images selected for this point.");
-      return;
-    }
-
-    uploadBtn.classList.add('uploaded');
-    uploadBtn.innerText = `✓ ${count} Uploaded`;
-  }
-
-  function toggleStatus(btn) {
-    btn.classList.toggle('active');
-    btn.innerText = btn.classList.contains('active') ? '✓ VERIFIED' : 'NOT COMPLIANT';
-    updateScoreMeter();
-  }
-
-  function updateScoreMeter() {
-    const buttons = document.querySelectorAll('.btn-toggle');
-    if (buttons.length === 0) return { score: 0 };
-
-    let activeCount = 0;
-    buttons.forEach(b => { if (b.classList.contains('active')) activeCount++; });
-
-    const score = Math.round((activeCount / buttons.length) * 100);
-    const scorePill = document.getElementById('scoreDisplay');
-    const meterFill = document.getElementById('meterFill');
-
-    scorePill.innerText = score + '%';
-    meterFill.style.width = score + '%';
-
-    const color = score >= 80 ? '#10B981' : score >= 50 ? '#F59E0B' : '#E31837';
-    scorePill.style.background = color;
-    meterFill.style.background = color;
-
-    return { activeCount, total: buttons.length, score };
-  }
-
-  function processAndResizeImage(file) {
-    return new Promise((resolve) => {
-      if (!file) return resolve(null);
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        const img = new Image();
-        img.onload = () => {
-          const canvas = document.createElement('canvas');
-          let width = img.width;
-          let height = img.height;
-          const maxDim = 600;
-
-          if (width > height && width > maxDim) {
-            height *= maxDim / width;
-            width = maxDim;
-          } else if (height > maxDim) {
-            width *= maxDim / height;
-            height = maxDim;
-          }
-
-          canvas.width = width;
-          canvas.height = height;
-          const ctx = canvas.getContext('2d');
-          ctx.drawImage(img, 0, 0, width, height);
-          resolve(canvas.toDataURL('image/jpeg', 0.5));
-        };
-        img.src = e.target.result;
-      };
-      reader.readAsDataURL(file);
-    });
-  }
-
-  async function submitAssessment() {
-    const statusMsg = document.getElementById('statusMessage');
-
-    const scoreData = updateScoreMeter();
-    const rows = document.querySelectorAll('.item-card');
-
-    statusMsg.innerHTML = '<span style="color:#F59E0B;">⏳ Processing images & building PDF report...</span>';
-
-    const reviewNo = document.getElementById('reviewNo').value;
-    const auditDate = document.getElementById('auditDate').value;
-    const zone = document.getElementById('zone').value;
-    const incharge = document.getElementById('incharge').value || 'N/A';
-    const reviewerSap = document.getElementById('reviewerSap').value || 'N/A';
-    const reviewerEmail = document.getElementById('reviewerEmail').value || 'N/A';
-
-    let tableRowsHtml = '';
-    let itemIdx = 1;
-
-    for (let row of rows) {
-      const itemId = row.getAttribute('data-id');
-      const name = row.querySelector('.item-name').innerText;
-      const isDone = row.querySelector('.btn-toggle').classList.contains('active');
-      const remarkVal = row.querySelector('.item-remark').value || 'N/A';
-      const files = itemPhotos[itemId] || [];
-
-      let imagesHtml = '';
-      for (let file of files) {
-        const base64 = await processAndResizeImage(file);
-        if (base64) {
-          imagesHtml += `<img src="${base64}" style="width: 75px; height: 75px; object-fit: cover; border-radius: 4px; margin-right: 4px; margin-bottom: 4px; border: 1px solid #ccc;"/>`;
-        }
-      }
-
-      const statusBadge = isDone 
-        ? '<span style="color: #10B981; font-weight: bold;">✓ VERIFIED</span>' 
-        : '<span style="color: #E31837; font-weight: bold;">NOT COMPLIANT</span>';
-
-      tableRowsHtml += `
-        <tr>
-          <td style="padding: 8px; border: 1px solid #CBD5E1; text-align: center;">${itemIdx++}</td>
-          <td style="padding: 8px; border: 1px solid #CBD5E1;">${name}</td>
-          <td style="padding: 8px; border: 1px solid #CBD5E1;">${statusBadge}</td>
-          <td style="padding: 8px; border: 1px solid #CBD5E1;">${remarkVal}</td>
-          <td style="padding: 8px; border: 1px solid #CBD5E1;">${imagesHtml || 'No Image'}</td>
-        </tr>
-      `;
-    }
-
-    const fullHtmlReport = `<!DOCTYPE html><html><head><meta charset="utf-8"><style>body{font-family:Arial,sans-serif;margin:20px;color:#1E293B;}.header{background:#0F172A;color:white;padding:15px;border-bottom:4px solid #E31837;}.meta{margin:15px 0;font-size:13px;width:100%;border-collapse:collapse;}.meta td{padding:6px;border:1px solid #E2E8F0;background:#F8FAFC;}table.report-table{width:100%;border-collapse:collapse;font-size:11px;margin-top:10px;}table.report-table th{background:#1E293B;color:white;padding:8px;border:1px solid #CBD5E1;}</style></head><body><div class="header"><h2 style="margin:0;">AM/NS INDIA Pune Facility</h2><p style="margin:4px 0 0 0;font-size:12px;color:#94A3B8;">5S Compliance Review Audit Report</p></div><table class="meta"><tr><td><strong>Review Cycle:</strong> ${reviewNo}</td><td><strong>Date:</strong> ${auditDate}</td></tr><tr><td><strong>Zone / Dept:</strong> ${zone}</td><td><strong>Incharge:</strong> ${incharge}</td></tr><tr><td><strong>Reviewer SAP ID:</strong> ${reviewerSap}</td><td><strong>Reviewer Email:</strong> ${reviewerEmail}</td></tr><tr><td colspan="2"><strong>Compliance Score:</strong> <span style="font-size:16px;font-weight:bold;color:#E31837;">${scoreData.score}%</span></td></tr></table><table class="report-table"><thead><tr><th style="width:5%;">#</th><th style="width:30%;">Compliance Point</th><th style="width:15%;">Status</th><th style="width:25%;">Remark</th><th style="width:25%;">Captured Photos</th></tr></thead><tbody>${tableRowsHtml}</tbody></table></body></html>`;
-
-    const payload = {
-      facility: 'AM/NS INDIA Pune Facility',
-      reviewNo: reviewNo,
-      date: auditDate,
-      zone: zone,
-      incharge: incharge,
-      reviewerSap: reviewerSap,
-      reviewerEmail: reviewerEmail,
-      complianceScore: scoreData.score,
-      htmlReport: fullHtmlReport
-    };
-
-    try {
-      const response = await fetch(POWER_AUTOMATE_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
-      });
-
-      if (response.ok) {
-        statusMsg.innerHTML = '<span style="color:#10B981;">✓ Review submitted! PDF report is being emailed.</span>';
-      } else {
-        throw new Error('HTTP status ' + response.status);
-      }
-    } catch (err) {
-      console.error(err);
-      statusMsg.innerHTML = '<span style="color:#E31837;">✕ Submission failed. Check network connection.</span>';
-    }
-  }
-
-  window.onload = renderChecklist;
+window.onload = renderChecklist;
 </script>
-
 </body>
 </html>
