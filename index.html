@@ -135,7 +135,7 @@ body{background:linear-gradient(135deg,#0F172A,#1E293B);color:var(--s800);min-he
 document.getElementById('auditDate').valueAsDate = new Date();
 
 // Power Automate HTTP POST Trigger Endpoint
-const POWER_AUTOMATE_URL = 'https://default37cd273a1cec4aaea29741480ea54f.8d.environment.api.powerplatform.com:443/powerautomate/automations/direct/cu/11/workflows/1266e8a9f7e64c4d9eb4149a283d413f/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=W1NIdQ-1aotVVL0F6YwUOv8Mw7jmU_X6hBjyjAsPS9k';
+const POWER_AUTOMATE_URL = 'https://default37cd273a1cec4aaea29741480ea54f.8d.environment.api.powerplatform.com:443/powerautomate/automations/direct/cu/01/workflows/79a2547655034f65aa14c08e49f7dab7/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=90UQd_nGMeGSmUqaeq1HVv5zM3_0FUqR8_tYnmDbfJE';
 
 const itemPhotos = {};
 
@@ -272,6 +272,16 @@ async function imgsHtml(files) {
   return h;
 }
 
+// Small thumbnails for the Excel report (keeps the payload light)
+async function thumbsOf(files) {
+  const out = [];
+  for (const f of (files || [])) {
+    const b64 = await processAndResizeImage(f, 320, 0.6);
+    if (b64) out.push(b64);
+  }
+  return out;
+}
+
 function renderChecklist() {
   const type = isOfficeZone(document.getElementById('zone').value) ? 'office' : 'plant';
   const data = checklistData[type];
@@ -376,7 +386,7 @@ function updateScoreMeter() {
   return { activeCount: active, total: buttons.length, score };
 }
 
-function processAndResizeImage(file) {
+function processAndResizeImage(file, max = 600, quality = 0.5) {
   return new Promise(resolve => {
     if (!file) return resolve(null);
     const reader = new FileReader();
@@ -385,12 +395,11 @@ function processAndResizeImage(file) {
       img.onload = () => {
         const canvas = document.createElement('canvas');
         let w = img.width, h = img.height;
-        const max = 600;
         if (w > h && w > max) { h *= max / w; w = max; }
         else if (h > max) { w *= max / h; h = max; }
         canvas.width = w; canvas.height = h;
         canvas.getContext('2d').drawImage(img, 0, 0, w, h);
-        resolve(canvas.toDataURL('image/jpeg', 0.5));
+        resolve(canvas.toDataURL('image/jpeg', quality));
       };
       img.onerror = () => resolve(null);
       img.src = e.target.result;
@@ -405,7 +414,7 @@ async function submitAssessment() {
   btn.disabled = true;
   const scoreData = updateScoreMeter();
   const rows = document.querySelectorAll('.item-card');
-  statusMsg.innerHTML = '<span style="color:#F59E0B;">⏳ Processing images & building PDF report...</span>';
+  statusMsg.innerHTML = '<span style="color:#F59E0B;">⏳ Processing images & building PDF + Excel report...</span>';
 
   const reviewNo = document.getElementById('reviewNo').value;
   const auditDate = document.getElementById('auditDate').value;
@@ -416,6 +425,7 @@ async function submitAssessment() {
 
   let tableRowsHtml = '', idx = 1, lastCat = '';
   const sTotals = {};
+  const itemsData = [];
   const catLabel = { "1S":"1S — Sort","2S":"2S — Set in Order","3S":"3S — Shine","4S":"4S — Standardize","5S":"5S — Sustain","TRAINING":"Common — 5S Training" };
 
   for (const row of rows) {
@@ -436,6 +446,23 @@ async function submitAssessment() {
     } else {
       imagesHtml = await imgsHtml(files);
     }
+
+    let thumbs = [], photoNote = '';
+    if (row.getAttribute('data-training')) {
+      const a = await thumbsOf(itemPhotos.train_att);
+      const tr = await thumbsOf(itemPhotos.train_pic);
+      thumbs = a.concat(tr);
+      photoNote = `Attendance sheet photos: ${a.length}, Training photos: ${tr.length}`;
+    } else {
+      thumbs = await thumbsOf(files);
+    }
+    itemsData.push({
+      s: cat, no: idx, point: name,
+      status: isDone ? 'VERIFIED' : 'NOT COMPLIANT',
+      score: isDone ? 1 : 0, max: 1,
+      remark: row.querySelector('.item-remark').value || '',
+      photos: thumbs, photoNote
+    });
 
     if (cat !== lastCat) {
       tableRowsHtml += `<tr><td colspan="5" style="padding:6px 8px;background:#E2E8F0;font-weight:bold;border:1px solid #CBD5E1;">${catLabel[cat]}</td></tr>`;
@@ -471,6 +498,8 @@ async function submitAssessment() {
     verifiedCount: scoreData.activeCount,
     totalPoints: scoreData.total,
     sScores: sScores,
+    areaType: isOfficeZone(zone) ? 'Office Area' : 'Plant',
+    items: itemsData,
     htmlReport: fullHtmlReport
   };
 
@@ -481,7 +510,7 @@ async function submitAssessment() {
       body: JSON.stringify(payload)
     });
     if (!response.ok) throw new Error('HTTP status ' + response.status);
-    statusMsg.innerHTML = '<span style="color:#10B981;">✓ Review submitted! PDF report is being emailed.</span>';
+    statusMsg.innerHTML = '<span style="color:#10B981;">✓ Review submitted! PDF and Excel reports are being emailed.</span>';
   } catch (err) {
     console.error(err);
     statusMsg.innerHTML = '<span style="color:#E31837;">✕ Submission failed. Check network connection.</span>';
