@@ -205,18 +205,16 @@ if (LOGO_DATA) {
    ============================================================ */
 const SUBZONES = {
   "CGL -1": [
-    { name: "1. ENTRY SECTION",   area: "Uncoiler 1 to Bridle #1",           resp: "Omkar Dhembhare & Vishal Yadav , Anshit kumar Gautam " },
-    { name: "2. PROCESS SECTION", area: "Bridle #2 to Bidle #3 & Centre Pulpit",    resp: "Amol Wadalkar & Narendra Chambhare, Swarnalata Rani" },
-    { name: "3. SKINPASS",  area: "Bridle #4 to Chromating",       resp: "Sandesh Suthar & Nitin Patil" },
-    { name: "4. EXIT SECTION",    area: "Logo machine to Recoiler 2",  resp: "Dajiba Patil & Niraj Mane" },
-  
+    { name: "1. ENTRY SECTION",   area: "Uncoiler 1 to Bridle #1",                 resp: "Omkar Dhembhare & Vishal Yadav, Anshit Kumar Gautam" },
+    { name: "2. PROCESS SECTION", area: "Bridle #2 to Bridle #3 & Centre Pulpit",  resp: "Amol Wadalkar & Narendra Chambhare, Swarnalata Rani" },
+    { name: "3. SKINPASS",        area: "Bridle #4 to Chromating",                 resp: "Sandesh Suthar & Nitin Patil" },
+    { name: "4. EXIT SECTION",    area: "Logo machine to Recoiler 2",              resp: "Dajiba Patil & Niraj Mane" }
   ],
   "CGL -2": [
-    { name: "1. ENTRY SECTION",   area: "Uncoiler 1 to Bridle #1",           resp: "Vaibhav Shindekar & Vipul Agre, Ashutosh Dash" },
-    { name: "2. PROCESS SECTION", area: "Bridle #2 to Bidle #3 & Centre Pulpit",    resp: "Anil Shirke & Pankaj Deore, Pritam Gupta, Jhansi Manupati" },
-    { name: "3. SKINPASS",  area: "Bridle #4 to Chromating",       resp: "Sunil Sharma & Suryakant Pawar & Rahul Kumawat" },
-    { name: "4. EXIT SECTION",    area: "Logo machine to Recoiler 2",  resp: "Harendra Singh & Sagar Shinde" },
-   
+    { name: "1. ENTRY SECTION",   area: "Uncoiler 1 to Bridle #1",                 resp: "Vaibhav Shindekar & Vipul Agre, Ashutosh Dash" },
+    { name: "2. PROCESS SECTION", area: "Bridle #2 to Bridle #3 & Centre Pulpit",  resp: "Anil Shirke & Pankaj Deore, Pritam Gupta, Jhansi Manupati" },
+    { name: "3. SKINPASS",        area: "Bridle #4 to Chromating",                 resp: "Sunil Sharma & Suryakant Pawar & Rahul Kumawat" },
+    { name: "4. EXIT SECTION",    area: "Logo machine to Recoiler 2",              resp: "Harendra Singh & Sagar Shinde" }
   ]
 };
 /* Zones without sub zones – zone-level responsible persons */
@@ -872,6 +870,13 @@ async function submitAssessment() {
       const bfB64 = await imgsToB64(itemPhotos['bf_' + itemId]);
       const afB64 = await imgsToB64(itemPhotos['af_' + itemId]);
 
+      /* Compatibility with the existing Excel script (it only reads 'remark', 'photos', 'photoNote'):
+         remark = observation + action; photos = up to 2 before + 2 after (+ training evidence) */
+      const isTrainRow = !!row.getAttribute('data-training');
+      const remarkCombined = [obsRaw && ('Observation: ' + obsRaw), actRaw && ('Action Taken: ' + actRaw)].filter(Boolean).join('  |  ');
+      const photosForExcel = [...bfB64.slice(0, 2), ...afB64.slice(0, 2), ...(isTrainRow ? photosB64.slice(0, 2) : [])];
+      const noteForExcel = `Before: ${bfB64.length} | After: ${afB64.length}` + (photoNote ? ' | ' + photoNote : '');
+
       itemsPayload.push({
         s: cat,
         no: idx,
@@ -879,9 +884,9 @@ async function submitAssessment() {
         status: isDone ? 'Compliant' : (stat === 'nc' ? 'Non-Compliant' : 'Not Marked'),
         score: isDone ? 1 : 0,
         max: 1,
-        remark: '',
-        photos: photosB64.slice(0, 3),   /* max 3 photos per point for Excel (keeps script input small); PDF shows all */
-        photoNote: photoNote,
+        remark: remarkCombined,
+        photos: photosForExcel,   /* PDF shows all photos */
+        photoNote: noteForExcel,
         observation: obsRaw,
         beforePhotos: bfB64.slice(0, 3),   /* max 3 per point for Excel; PDF shows all */
         actionTaken: actRaw,
