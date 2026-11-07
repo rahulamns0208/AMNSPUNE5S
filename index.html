@@ -23,6 +23,7 @@ body{background:linear-gradient(135deg,#0F172A,#1E293B);color:var(--s800);min-he
 .input-field label{font-size:11px;font-weight:700;color:var(--s600);text-transform:uppercase;letter-spacing:.5px}
 .input-field input,.input-field select{padding:12px 14px;border:1px solid var(--s200);border-radius:var(--rm);font-size:14px;background:#fff;color:var(--s800);box-shadow:var(--sh)}
 .input-field input:focus,.input-field select:focus{outline:none;border-color:var(--red);box-shadow:0 0 0 3px rgba(227,24,55,.15)}
+.input-field input[readonly]{background:#F1F5F9;font-weight:600;cursor:default}
 .score-summary-bar{padding:16px clamp(16px,3vw,24px);background:#fff;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:16px;border-bottom:1px solid var(--s200)}
 .score-info{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
 .score-info-title{font-size:15px;font-weight:700}
@@ -34,7 +35,7 @@ body{background:linear-gradient(135deg,#0F172A,#1E293B);color:var(--s800);min-he
 .category-section{margin-bottom:28px;background:#fff;border:1px solid var(--s200);border-radius:var(--rm);overflow:hidden;box-shadow:var(--sh)}
 .category-title{background:var(--s800);color:#fff;padding:12px 20px;font-size:14px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;display:flex;align-items:center;gap:10px}
 .category-title::before{content:'';width:8px;height:8px;background:var(--red);border-radius:50%}
-.item-card{display:grid;grid-template-columns:45px 1.2fr 1.8fr 1.2fr 2fr 150px;align-items:start;gap:14px;padding:16px 20px;border-bottom:1px solid var(--s100)}
+.item-card{display:grid;grid-template-columns:45px 1.4fr 2fr 150px;align-items:start;gap:14px;padding:16px 20px;border-bottom:1px solid var(--s100)}
 .item-card:last-child{border-bottom:none}
 .item-card:hover{background:#FAF5F5}
 .item-index{font-weight:800;color:var(--red);font-size:13px;background:var(--s100);width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;margin-top:4px}
@@ -52,6 +53,12 @@ body{background:linear-gradient(135deg,#0F172A,#1E293B);color:var(--s800);min-he
 .preview-thumb{position:relative;width:50px;height:50px;border-radius:6px;overflow:hidden;border:1px solid var(--s200)}
 .preview-thumb img{width:100%;height:100%;object-fit:cover}
 .preview-thumb .remove-btn{position:absolute;top:2px;right:2px;background:rgba(227,24,55,.85);color:#fff;border:none;border-radius:50%;width:16px;height:16px;font-size:10px;line-height:16px;cursor:pointer}
+.obs-row{grid-column:1/-1;display:grid;grid-template-columns:repeat(4,1fr);gap:14px;padding:12px 14px;background:var(--s50);border:1px dashed var(--s200);border-radius:8px}
+.obs-box{display:flex;flex-direction:column;gap:6px}
+.obs-box>label{font-size:10px;font-weight:800;color:var(--s600);text-transform:uppercase}
+.obs-box textarea{width:100%;min-height:64px;padding:8px 10px;font-size:12px;border:1px solid var(--s200);border-radius:6px;background:#fff;color:var(--s800);resize:vertical}
+.obs-box textarea:focus{outline:none;border-color:var(--red)}
+.obs-row .photo-field{margin-top:0}
 .status-group{display:flex;flex-direction:column;gap:6px;margin-top:4px}
 .btn-status{width:100%;padding:10px 12px;border-radius:30px;border:2px solid var(--red);background:var(--red);color:#fff;font-weight:800;font-size:11px;cursor:pointer;transition:all .2s;box-shadow:var(--sh)}
 .btn-status.sel{background:var(--green);border-color:var(--green);box-shadow:0 4px 12px rgba(16,185,129,.35)}
@@ -60,8 +67,8 @@ body{background:linear-gradient(135deg,#0F172A,#1E293B);color:var(--s800);min-he
 .btn-submit{background:linear-gradient(135deg,var(--red),var(--red-h));color:#fff;border:none;padding:14px 36px;font-size:15px;font-weight:800;border-radius:var(--rm);cursor:pointer;text-transform:uppercase;box-shadow:0 4px 14px rgba(227,24,55,.35);width:100%;max-width:280px}
 .btn-submit:disabled{opacity:.6;cursor:not-allowed}
 @keyframes fadeIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
-@media(max-width:960px){.item-card{grid-template-columns:36px 1fr;gap:10px;padding:16px}.item-desc,.remark-field,.photo-field,.status-group{grid-column:1/-1}.status-group{flex-direction:row}.btn-status{flex:1}}
-@media(max-width:600px){.dock-footer{flex-direction:column;text-align:center}.btn-submit{max-width:100%}.meter-container{width:100%}.score-summary-bar{flex-direction:column;align-items:stretch}.score-pill{text-align:center}}
+@media(max-width:960px){.obs-row{grid-template-columns:1fr 1fr}.item-card{grid-template-columns:36px 1fr;gap:10px;padding:16px}.item-desc,.remark-field,.photo-field,.status-group{grid-column:1/-1}.item-desc:empty{display:none}.status-group{flex-direction:row}.btn-status{flex:1}}
+@media(max-width:600px){.obs-row{grid-template-columns:1fr}.dock-footer{flex-direction:column;text-align:center}.btn-submit{max-width:100%}.meter-container{width:100%}.score-summary-bar{flex-direction:column;align-items:stretch}.score-pill{text-align:center}}
 
 /* ===== SUCCESS CELEBRATION ===== */
 #successOverlay{display:none;position:fixed;inset:0;z-index:200;background:rgba(15,23,42,.88);backdrop-filter:blur(4px);align-items:center;justify-content:center;padding:16px}
@@ -101,11 +108,13 @@ body{background:linear-gradient(135deg,#0F172A,#1E293B);color:var(--s800);min-he
     <div class="input-field"><label for="auditDate">Review Date</label><input type="date" id="auditDate"></div>
     <div class="input-field">
       <label for="zone">Department / Zone Selection</label>
-      <select id="zone" onchange="switchZone()">
+      <select id="zone" onchange="onZoneChange()">
         <optgroup label="Plant &amp; Production Zones">
           <option value="CGL -1">CGL -1</option>
           <option value="CGL -2">CGL -2</option>
           <option value="N2-H2 GAS PLANT">N2-H2 GAS PLANT</option>
+          <option value="OFFLINE SPM/B&amp;K">OFFLINE SPM/B&amp;K</option>
+          <option value="UK SLITTER">UK SLITTER</option>
           <option value="CGL ELECTRICAL">CGL ELECTRICAL</option>
           <option value="CGL ME">CGL ME</option>
           <option value="CCL">CCL</option>
@@ -127,16 +136,19 @@ body{background:linear-gradient(135deg,#0F172A,#1E293B);color:var(--s800);min-he
         </optgroup>
       </select>
     </div>
-    <div class="input-field"><label for="incharge">REVIEWER Name</label><input type="text" id="incharge" placeholder="Enter Reviewer Name"></div>
-    <div class="input-field"><label for="reviewerSap">Reviewer SAP ID</label><input type="text" id="reviewerSap" placeholder="e.g. 10023456"></div>
-    <div class="input-field"><label for="reviewerEmail">Reviewer Mail ID</label><input type="email" id="reviewerEmail" placeholder="reviewer@amns.in"></div>
+    <div class="input-field" id="subZoneField" style="display:none;"><label for="subZone">Sub Zone Selection</label><select id="subZone" onchange="onSubChange()"></select></div>
+    <div class="input-field" id="areaField" style="display:none;"><label for="subArea">Area Covered</label><input type="text" id="subArea" readonly></div>
+    <div class="input-field" id="respField"><label for="areaResp">Area Responsible Person</label><select id="areaResp" onchange="toggleOther()"></select></div>
+    <div class="input-field" id="respOtherField" style="display:none;"><label for="respOther">Responsible Person Name</label><input type="text" id="respOther" placeholder="Enter name"></div>
+    <div class="input-field"><label for="reviewerSap">Responsible Person SAP ID</label><input type="text" id="reviewerSap" placeholder="e.g. 10023456"></div>
+    <div class="input-field"><label for="reviewerEmail">Responsible Person Mail ID</label><input type="email" id="reviewerEmail" placeholder="name@amns.in"></div>
   </section>
 
   <section class="score-summary-bar">
     <div class="score-info">
       <span class="score-info-title">5S Compliance Verification Score</span>
       <div class="meter-container"><div class="meter-fill" id="meterFill"></div></div>
-      <span class="score-count" id="scoreCount">0 / 23 verified</span>
+      <span class="score-count" id="scoreCount">0 / 28 verified</span>
     </div>
     <div class="score-pill" id="scoreDisplay">0%</div>
   </section>
@@ -187,6 +199,33 @@ if (LOGO_DATA) {
   document.getElementById('logoBadge').style.display = 'flex';
 }
 
+/* ============================================================
+   ZONE → SUB ZONE → AREA → RESPONSIBLE PERSON  (from Excel sheet 2)
+   Edit names / areas here when responsibilities change.
+   ============================================================ */
+const SUBZONES = {
+  "CGL -1": [
+    { name: "1. ENTRY SECTION",   area: "Uncoiler 1 to Bridle #1",           resp: "Omkar Dhembhare & Vishal Yadav , Anshit kumar Gautam " },
+    { name: "2. PROCESS SECTION", area: "Bridle #2 to Bidle #3 & Centre Pulpit",    resp: "Amol Wadalkar & Narendra Chambhare, Swarnalata Rani" },
+    { name: "3. SKINPASS",  area: "Bridle #4 to Chromating",       resp: "Sandesh Suthar & Nitin Patil" },
+    { name: "4. EXIT SECTION",    area: "Logo machine to Recoiler 2",  resp: "Dajiba Patil & Niraj Mane" },
+  
+  ],
+  "CGL -2": [
+    { name: "1. ENTRY SECTION",   area: "Uncoiler 1 to Bridle #1",           resp: "Vaibhav Shindekar & Vipul Agre, Ashutosh Dash" },
+    { name: "2. PROCESS SECTION", area: "Bridle #2 to Bidle #3 & Centre Pulpit",    resp: "Anil Shirke & Pankaj Deore, Pritam Gupta, Jhansi Manupati" },
+    { name: "3. SKINPASS",  area: "Bridle #4 to Chromating",       resp: "Sunil Sharma & Suryakant Pawar & Rahul Kumawat" },
+    { name: "4. EXIT SECTION",    area: "Logo machine to Recoiler 2",  resp: "Harendra Singh & Sagar Shinde" },
+   
+  ]
+};
+/* Zones without sub zones – zone-level responsible persons */
+const ZONE_RESP = {
+  "N2-H2 GAS PLANT": "Pankaj Deaore / Abhijit Kunde / Amit Pradhan",
+  "OFFLINE SPM/B&K": "Koniba Pawale & Devesh Sharma",
+  "UK SLITTER": "Narendra Chambhare / Koniba Pawale"
+};
+
 /* ================= AUTOSAVE (IndexedDB) ================= */
 const DB_NAME = 'amns_5s_draft', DB_STORE = 'kv';
 let dbPromise = null, autosaveOK = true, activeZone = null, restoring = false;
@@ -229,15 +268,69 @@ function setSaveStatus(ok, msg) {
 function markSaved() { setSaveStatus(true, '💾 Draft autosaved at ' + new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })); }
 function saveFail(e) { console.error(e); autosaveOK = false; setSaveStatus(false, '⚠ Autosave failed (storage full or blocked) – submit soon'); }
 
-const META_IDS = ['reviewNo', 'auditDate', 'zone', 'incharge', 'reviewerSap', 'reviewerEmail'];
+const META_IDS = ['reviewNo', 'auditDate', 'zone', 'subZone', 'areaResp', 'respOther', 'reviewerSap', 'reviewerEmail'];
 function readMeta() { const m = {}; META_IDS.forEach(id => m[id] = document.getElementById(id).value); return m; }
+
+/* Draft key = zone, plus sub zone when the zone has sub zones (each sub zone has its own draft) */
+function curKey() {
+  const z = document.getElementById('zone').value;
+  return SUBZONES[z] ? z + '::' + document.getElementById('subZone').value : z;
+}
+function populateSub(pref) {
+  const z = document.getElementById('zone').value;
+  const list = SUBZONES[z] || [];
+  const sel = document.getElementById('subZone');
+  sel.innerHTML = list.map(s => `<option value="${esc(s.name)}">${esc(s.name)}</option>`).join('');
+  if (pref && list.some(s => s.name === pref)) sel.value = pref;
+  document.getElementById('subZoneField').style.display = list.length ? 'flex' : 'none';
+  updateAreaInfo();
+  populateResp();
+}
+async function onSubChange() { updateAreaInfo(); populateResp(); await switchZone(); }
+
+/* Responsible person dropdown: individual names split from the Excel "Responsible" cell */
+function personList() {
+  const r = getAreaInfo().resp;
+  return r ? r.split(/\s*(?:&|,|\/)\s*/).map(x => x.trim()).filter(Boolean) : [];
+}
+function populateResp(pref, other) {
+  const list = personList(), sel = document.getElementById('areaResp');
+  sel.innerHTML = '<option value="">— Select Responsible Person —</option>' +
+    list.map(n => `<option value="${esc(n)}">${esc(n)}</option>`).join('') +
+    '<option value="__other">Other (enter name)</option>';
+  if (pref && (list.includes(pref) || pref === '__other')) sel.value = pref;
+  document.getElementById('respOther').value = other || '';
+  toggleOther();
+}
+function toggleOther() {
+  document.getElementById('respOtherField').style.display = document.getElementById('areaResp').value === '__other' ? 'flex' : 'none';
+}
+function getResponsible() {
+  const v = document.getElementById('areaResp').value;
+  return v === '__other' ? document.getElementById('respOther').value.trim() : v;
+}
+function getAreaInfo() {
+  const z = document.getElementById('zone').value;
+  const list = SUBZONES[z];
+  if (list) {
+    const s = list.find(x => x.name === document.getElementById('subZone').value) || list[0];
+    return { subZone: s.name, area: s.area, resp: s.resp };
+  }
+  return { subZone: '', area: '', resp: ZONE_RESP[z] || '' };
+}
+function updateAreaInfo() {
+  const i = getAreaInfo();
+  document.getElementById('subArea').value = i.area;
+  document.getElementById('areaField').style.display = i.area ? 'flex' : 'none';
+}
 
 async function saveMeta() { try { await dbSet('meta', readMeta()); markSaved(); } catch (e) { saveFail(e); } }
 function collectItemState() {
   document.querySelectorAll('.item-card').forEach(row => {
     itemState[row.getAttribute('data-id')] = {
       status: rowStatus(row),
-      remark: row.querySelector('.item-remark').value
+      obs: row.querySelector('.obs-text').value,
+      act: row.querySelector('.act-text').value
     };
   });
 }
@@ -287,7 +380,8 @@ function applyRestoredState() {
     if (!s) return;
     const st = s.status || (s.done ? 'ok' : '');
     row.querySelectorAll('.btn-status').forEach(b => b.classList.toggle('sel', b.getAttribute('data-val') === st));
-    row.querySelector('.item-remark').value = s.remark || '';
+    row.querySelector('.obs-text').value = s.obs || '';
+    row.querySelector('.act-text').value = s.act || '';
   });
   Object.keys(itemPhotos).forEach(id => {
     if (!document.getElementById('preview_' + id)) return;
@@ -300,8 +394,12 @@ function applyRestoredState() {
   updateScoreMeter();
 }
 
+/* Zone dropdown changed: rebuild sub zones (first one selected), then load that draft */
+async function onZoneChange() { populateSub(); await switchZone(); }
+
 async function switchZone() {
-  const newZone = document.getElementById('zone').value;
+  updateAreaInfo();
+  const newZone = curKey();
   if (activeZone && activeZone !== newZone) {
     collectItemState(); clearTimeout(saveTimer);
     await saveItems(activeZone);
@@ -317,35 +415,42 @@ async function switchZone() {
 
 async function restoreDraft() {
   restoring = true;
+  let savedSub = '', savedResp = '', savedOther = '';
   try {
     if (navigator.storage && navigator.storage.persist) navigator.storage.persist();
     const meta = await dbGet('meta');
-    if (meta) META_IDS.forEach(id => { if (meta[id] != null && meta[id] !== '') document.getElementById(id).value = meta[id]; });
+    if (meta) {
+      META_IDS.forEach(id => { if (id !== 'subZone' && id !== 'areaResp' && meta[id] != null && meta[id] !== '') document.getElementById(id).value = meta[id]; });
+      savedSub = meta.subZone || ''; savedResp = meta.areaResp || ''; savedOther = meta.respOther || '';
+    }
   } catch (e) { saveFail(e); }
+  populateSub(savedSub);
+  populateResp(savedResp, savedOther);
   restoring = false;
   await switchZone();
   let n = 0; Object.keys(itemPhotos).forEach(k => n += itemPhotos[k].length);
   const done = Object.values(itemState).filter(s => s.status === 'ok' || s.done).length;
-  if (n || done || Object.values(itemState).some(s => s.remark)) setSaveStatus(true, '♻ Draft restored (' + done + ' verified, ' + n + ' photos) – autosave on');
+  if (n || done || Object.values(itemState).some(s => s.remark || s.obs || s.act)) setSaveStatus(true, '♻ Draft restored (' + done + ' verified, ' + n + ' photos) – autosave on');
 }
 
-async function startFreshForm(submittedZone) {
+async function startFreshForm(submittedKey) {
   clearTimeout(saveTimer); restoring = true;
   try {
-    await dbDelKeys(k => k === 'items:' + submittedZone || k.startsWith('photos:' + submittedZone + ':'));
+    await dbDelKeys(k => k === 'items:' + submittedKey || k.startsWith('photos:' + submittedKey + ':'));
     await dbSet('meta', null);
   } catch (e) { console.error(e); }
   document.getElementById('reviewNo').value = 'Review Cycle 1';
   document.getElementById('auditDate').valueAsDate = new Date();
-  ['incharge', 'reviewerSap', 'reviewerEmail'].forEach(id => document.getElementById(id).value = '');
+  ['reviewerSap', 'reviewerEmail', 'respOther'].forEach(id => document.getElementById(id).value = '');
   document.getElementById('zone').selectedIndex = 0;
+  populateSub();
   activeZone = null; restoring = false;
   await switchZone();
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 document.addEventListener('input', e => { if (e.target.closest('.audit-meta-grid, .item-card')) scheduleSave(); });
-document.addEventListener('change', e => { if (e.target.closest('.audit-meta-grid') && e.target.id !== 'zone') scheduleSave(); });
+document.addEventListener('change', e => { if (e.target.closest('.audit-meta-grid') && e.target.id !== 'zone' && e.target.id !== 'subZone') scheduleSave(); });
 document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'hidden') flushSave(); });
 window.addEventListener('pagehide', flushSave);
 
@@ -354,40 +459,46 @@ const POWER_AUTOMATE_URL = 'https://default37cd273a1cec4aaea29741480ea54f.8d.env
 
 const itemPhotos = {};
 
+/* Plant checklist = 28 points from Excel sheet 1 (1S:5, 2S:7, 3S:8, 4S:5, 5S:3) */
 const checklistData = {
   plant: {
     s1: [
-      { id: "1s_1", name: "Unused Material & Scrap", desc: "Verify no scrap, broken pallets, or defective coils accumulate in active plant zones." },
-      { id: "1s_2", name: "Red Tag Holding Area", desc: "Ensure non-moving machinery spare parts or tagged items are properly kept in the Red Tag Zone." },
-      { id: "1s_3", name: "Material & Raw Coil Sorting", desc: "Verify active production coils and consumables are separated from non-active stock." },
-      { id: "1s_4", name: "Clear Gangways & Exits", desc: "Ensure no temporary maintenance tools or scrap block crane routes or emergency exits." },
-      { id: "1s_5", name: "Red-Tag Portal Logging & Disposal", desc: "Verify all red-tagged items are logged in the Red-Tag portal and disposed/segregated as per action plan." }
+      { id: "1s_1", name: "No irrelevant parts, unwanted materials or tools", desc: "" },
+      { id: "1s_2", name: "Red tag register/Portal in use", desc: "" },
+      { id: "1s_3", name: "Only regularly used tools and equipment kept on shop floor", desc: "" },
+      { id: "1s_4", name: "Clear walkways & Exits", desc: "" },
+      { id: "1s_5", name: "Dustbins segregated by waste type", desc: "" }
     ],
     s2: [
-      { id: "2s_1", name: "Name Plates & Equipment Tags", desc: "Check that all machinery, valves, panels, and chemical/oil drums have legible identification tags." },
-      { id: "2s_2", name: "Shadow Boards & Tool Racks", desc: "Ensure maintenance and operational tools are stored on designated shadow boards when not in use." },
-      { id: "2s_3", name: "Floor Demarcation Lines", desc: "Verify yellow/red boundary lines for coil storage, crane drop zones, and walkways are intact." },
-      { id: "2s_4", name: "Min/Max Storage Visual Controls", desc: "Check min/max visual stock indicators and pressure/temperature range markings." },
-      { id: "2s_5", name: "FIFO Compliance", desc: "Verify date stickers/rotation markers and first-in-first-out discipline for stored materials and consumables." }
+      { id: "2s_1", name: "Shelves & storage areas marked with location indicators", desc: "" },
+      { id: "2s_2", name: "Does everything have a place? Is everything in its place", desc: "" },
+      { id: "2s_3", name: "Directions for Emergency Exit / Assembly Point / Drinking water / Wash Rooms", desc: "" },
+      { id: "2s_4", name: "Are the max & min allowable quantities indicated", desc: "" },
+      { id: "2s_5", name: "Are tools arranged functionally to facilitate picking them & returning them", desc: "" },
+      { id: "2s_6", name: "Hanging of loose wires, Preventing dirt / spillage / Leakage etc.", desc: "" },
+      { id: "2s_7", name: "Safety equipment and supplies are clear and in good condition", desc: "" }
     ],
     s3: [
-      { id: "3s_1", name: "Routine Floor & Area Sweeping", desc: "Confirm regular shift sweeping, trash disposal, and general cleanliness of plant floor." },
-      { id: "3s_2", name: "Oil Leakage & Spill Control", desc: "Inspect hydraulic rooms and oil cellars for leakage; ensure immediate cleanup and drip tray placement." },
-      { id: "3s_3", name: "Equipment & Desk Cleanliness", desc: "Verify operator desks, pulpit glass, and control panels are clean of industrial dust and grease." },
-      { id: "3s_4", name: "Cleanliness of Peripheral areas", desc: "extend cleaning to pathways & peripheral areas and removed all secondary items " },
-      { id: "3s_5", name: "Defect Log & Maintenance Tickets", desc: "Verify defects found during cleaning are recorded in the Defect Log and maintenance tickets are raised/closed." }
+      { id: "3s_1", name: "Floors, walls, ceilings & pipework are in good condition & free from dirt/dust", desc: "" },
+      { id: "3s_2", name: "Racks, cabinets and shelves are kept clean", desc: "" },
+      { id: "3s_3", name: "Machines, equipment and tools are kept clean", desc: "" },
+      { id: "3s_4", name: "Availability of Sufficient Drinking Water", desc: "" },
+      { id: "3s_5", name: "Lighting is enough and all lighting is free from dust", desc: "" },
+      { id: "3s_6", name: "Good movement of air exists through the room", desc: "" },
+      { id: "3s_7", name: "Cable Trench/ hydraulic PP & valve stand are kept clean and well organised", desc: "" },
+      { id: "3s_8", name: "Cleaning tools and materials are easily accessible", desc: "" }
     ],
     s4: [
-      { id: "4s_1", name: "Visual Management Boards", desc: "Check 5S boards with zone map, before/after photos, and area scores are displayed and updated." },
-      { id: "4s_2", name: "Cleaning Checklist & Responsibility Matrix", desc: "Verify 5S cleaning checklist and responsibility matrix are posted with named owners and daily sign-off." },
-      { id: "4s_3", name: "Colour Coding (Pipes & Dustbins)", desc: "Ensure pipelines, dustbins, and zones follow the standard colour coding." },
-      { id: "4s_4", name: "Safety & Emergency Visuals", desc: "Verify emergency contacts, evacuation routes, assembly points, and PPE signage are visible and intact." },
+      { id: "4s_1", name: "Information displays, signs, colour coding & other markings are established", desc: "" },
+      { id: "4s_2", name: "Color coding followed", desc: "" },
+      { id: "4s_3", name: "Fire Extinguishers available & Emergency contacts are displayed", desc: "" },
+      { id: "4s_4", name: "5S checklists, schedules and routines are defined and being used", desc: "" },
+      { id: "4s_5", name: "Easy to find assembly areas & Emergency Exits", desc: "" }
     ],
     s5: [
-      { id: "5s_1", name: "Monthly Internal Audit On Schedule", desc: "Verify monthly internal 5S audit was completed on schedule with completed forms." },
-      { id: "5s_2", name: "Corrective Action & Re-audit", desc: "Confirm actions are closed for any S scoring below 90% and re-audit is done within 2 weeks." },
-      { id: "5s_5", name: "New Joiner 5S Induction", desc: "Verify new associates are trained on area-specific 5S standards within their first week." },
-      { id: "5s_train", training: true, name: "Weekly 5S Training (Mandatory — 1S to 5S)", desc: "Verify weekly 5S training / toolbox talk covering Sort, Set in Order, Shine, Standardize and Sustain was conducted. Upload attendance sheet photo and training photos." }
+      { id: "5s_1", name: "Everybody participation in 5S with members responsibility", desc: "" },
+      { id: "5s_2", training: true, name: "Is everybody adequately trained in 5S", desc: "Mandatory evidence: upload attendance sheet photo and training photos." },
+      { id: "5s_3", name: "Improvement (i.e. before and after pictures) in document", desc: "" }
     ]
   },
   office: {
@@ -432,7 +543,11 @@ const isOfficeZone = z => OFFICE_ZONES.includes(z);
 const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 
 function photoBlock(id, label, mode) {
-  const pick = mode === 'live'
+  const gal = `<label class="btn-select-photo" for="file_${id}">🖼️ Gallery</label>
+       <input type="file" id="file_${id}" accept="image/*" multiple style="display:none;" onchange="handleImageSelection('${id}', this)">`;
+  const pick = mode === 'both'
+    ? `<button type="button" class="btn-select-photo" style="border:none;" onclick="openCamera('${id}')">📷 Live</button>` + gal
+    : mode === 'live'
     ? `<button type="button" class="btn-select-photo" style="border:none;" onclick="openCamera('${id}')">📷 Live Capture</button>`
     : `<label class="btn-select-photo" for="file_${id}">🖼️ Select from Gallery</label>
        <input type="file" id="file_${id}" accept="image/*" multiple style="display:none;" onchange="handleImageSelection('${id}', this)">`;
@@ -505,17 +620,20 @@ function renderChecklist() {
   categories.forEach(cat => {
     html += `<div class="category-section"><div class="category-title">${cat.title}</div><div class="checklist-items">`;
     cat.items.forEach(item => {
-      [item.id,'train_att','train_pic'].forEach(k => { itemPhotos[k] = itemPhotos[k] || []; });
+      [item.id,'train_att','train_pic','bf_'+item.id,'af_'+item.id].forEach(k => { itemPhotos[k] = itemPhotos[k] || []; });
       html += `
         <div class="item-card" data-id="${item.id}" data-cat="${cat.key}" ${item.training ? 'data-training="1"' : ''}>
           <div class="item-index">${n++}</div>
           <div class="item-name">${item.name}</div>
-          <div class="item-desc">${item.desc}</div>
-          <div class="remark-field"><input type="text" class="item-remark" placeholder="Remark (Optional)"></div>
-          ${item.training
-            ? photoBlock('train_att','Attendance Sheet Photos (Upload from Gallery)','gallery') + photoBlock('train_pic','Training Given Photos (Upload from Gallery)','gallery')
-            : photoBlock(item.id,'Photos (Optional - Up to 10) — Live Capture Only','live')}
+          <div class="item-desc">${item.desc || ''}</div>
           <div class="status-group"><button type="button" class="btn-status" data-val="ok" onclick="setStatus(this)">✓ COMPLIANT</button><button type="button" class="btn-status" data-val="nc" onclick="setStatus(this)">✕ NOT COMPLIANT</button></div>
+          <div class="obs-row">
+            <div class="obs-box"><label>Observation</label><textarea class="obs-text" placeholder="Describe the observation / gap found (Optional)"></textarea></div>
+            ${photoBlock('bf_' + item.id, 'Before Photo (Up to 10)', 'both')}
+            <div class="obs-box"><label>Action Taken</label><textarea class="act-text" placeholder="Describe the corrective action taken (Optional)"></textarea></div>
+            ${photoBlock('af_' + item.id, 'After Photo (Live Capture Only, Up to 10)', 'live')}
+          </div>
+          ${item.training ? `<div class="obs-row" style="grid-template-columns:repeat(2,1fr);">${photoBlock('train_att','Attendance Sheet Photos (Upload from Gallery)','gallery')}${photoBlock('train_pic','Training Given Photos (Upload from Gallery)','gallery')}</div>` : ''}
         </div>`;
     });
     html += `</div></div>`;
@@ -693,10 +811,15 @@ async function submitAssessment() {
   const statusMsg = document.getElementById('statusMessage');
   const btn = document.getElementById('submitBtn');
 
-  /* reviewer email is required (flow sends mail to it) */
+  /* responsible person + email are required (flow sends mail to the email) */
+  if (!getResponsible()) {
+    statusMsg.innerHTML = '<span style="color:#E31837;">✕ Select the Area Responsible Person before submitting.</span>';
+    document.getElementById('areaResp').focus();
+    return;
+  }
   const emailVal = document.getElementById('reviewerEmail').value.trim();
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailVal)) {
-    statusMsg.innerHTML = '<span style="color:#E31837;">✕ Enter a valid Reviewer Mail ID before submitting.</span>';
+    statusMsg.innerHTML = '<span style="color:#E31837;">✕ Enter a valid Responsible Person Mail ID before submitting.</span>';
     document.getElementById('reviewerEmail').focus();
     return;
   }
@@ -709,9 +832,12 @@ async function submitAssessment() {
   const reviewNo = document.getElementById('reviewNo').value;
   const auditDate = document.getElementById('auditDate').value;
   const zone = document.getElementById('zone').value;
+  const areaInfo = getAreaInfo();
+  const draftKey = curKey();
+  const zoneLabel = areaInfo.subZone ? zone + ' — ' + areaInfo.subZone : zone;
   await flushSave();
   let submitted = false;
-  const incharge = document.getElementById('incharge').value || 'N/A';
+  const incharge = getResponsible();
   const reviewerSap = document.getElementById('reviewerSap').value || 'N/A';
   const reviewerEmail = emailVal;
 
@@ -726,8 +852,6 @@ async function submitAssessment() {
       const cat = row.getAttribute('data-cat');
       const name = row.querySelector('.item-name').innerText;
       const stat = rowStatus(row); const isDone = stat === 'ok';
-      const remarkRaw = row.querySelector('.item-remark').value || '';
-      const remarkVal = esc(remarkRaw || 'N/A');
 
       sTotals[cat] = sTotals[cat] || { ok: 0, total: 0 };
       sTotals[cat].total++;
@@ -741,9 +865,12 @@ async function submitAssessment() {
         photosB64 = [...a, ...p];
         photoNote = `Attendance sheet: ${a.length}, Training photos: ${p.length}`;
       } else {
-        photosB64 = await imgsToB64(itemPhotos[itemId]);
-        imagesHtml = b64ToHtml(photosB64);
       }
+
+      const obsRaw = row.querySelector('.obs-text').value || '';
+      const actRaw = row.querySelector('.act-text').value || '';
+      const bfB64 = await imgsToB64(itemPhotos['bf_' + itemId]);
+      const afB64 = await imgsToB64(itemPhotos['af_' + itemId]);
 
       itemsPayload.push({
         s: cat,
@@ -752,13 +879,19 @@ async function submitAssessment() {
         status: isDone ? 'Compliant' : (stat === 'nc' ? 'Non-Compliant' : 'Not Marked'),
         score: isDone ? 1 : 0,
         max: 1,
-        remark: remarkRaw,
+        remark: '',
         photos: photosB64.slice(0, 3),   /* max 3 photos per point for Excel (keeps script input small); PDF shows all */
-        photoNote: photoNote
+        photoNote: photoNote,
+        observation: obsRaw,
+        beforePhotos: bfB64.slice(0, 3),   /* max 3 per point for Excel; PDF shows all */
+        actionTaken: actRaw,
+        afterPhotos: afB64.slice(0, 3),
+        beforeNote: `Before photos: ${bfB64.length}`,
+        afterNote: `After photos: ${afB64.length}`
       });
 
       if (cat !== lastCat) {
-        tableRowsHtml += `<tr><td colspan="5" style="padding:6px 8px;background:#E2E8F0;font-weight:bold;border:1px solid #CBD5E1;">${catLabel[cat]}</td></tr>`;
+        tableRowsHtml += `<tr><td colspan="3" style="padding:6px 8px;background:#E2E8F0;font-weight:bold;border:1px solid #CBD5E1;">${catLabel[cat]}</td></tr>`;
         lastCat = cat;
       }
       const badge = isDone
@@ -770,8 +903,12 @@ async function submitAssessment() {
         <td style="padding:8px;border:1px solid #CBD5E1;text-align:center;">${idx++}</td>
         <td style="padding:8px;border:1px solid #CBD5E1;">${name}</td>
         <td style="padding:8px;border:1px solid #CBD5E1;">${badge}</td>
-        <td style="padding:8px;border:1px solid #CBD5E1;">${remarkVal}</td>
-        <td style="padding:8px;border:1px solid #CBD5E1;">${imagesHtml || 'No Image'}</td></tr>`;
+      </tr>`;
+      const isTrain = !!row.getAttribute('data-training');
+      if (obsRaw || actRaw || bfB64.length || afB64.length || isTrain) {
+        const cell = (t, body) => `<td style="width:25%;vertical-align:top;padding:4px;"><b>${t}:</b><br>${body}</td>`;
+        tableRowsHtml += `<tr><td style="border:1px solid #CBD5E1;background:#F8FAFC;"></td><td colspan="2" style="padding:6px;border:1px solid #CBD5E1;background:#F8FAFC;"><table style="width:100%;border-collapse:collapse;font-size:11px;"><tr>${cell('Observation', esc(obsRaw || 'N/A'))}${cell('Before Photo', b64ToHtml(bfB64) || 'No Image')}${cell('Action Taken', esc(actRaw || 'N/A'))}${cell('After Photo', b64ToHtml(afB64) || 'No Image')}</tr></table>${isTrain ? `<div style="margin-top:6px;font-size:11px;">${imagesHtml}</div>` : ''}</td></tr>`;
+      }
     }
 
     const sScores = {};
@@ -783,12 +920,18 @@ async function submitAssessment() {
       summaryHtml += `<td style="padding:6px;border:1px solid #E2E8F0;text-align:center;background:#F8FAFC;"><strong>${k}</strong><br><span style="color:${pct >= 90 ? '#10B981' : '#E31837'};font-weight:bold;">${t.ok}/${t.total} (${pct}%)</span></td>`;
     });
 
+    const areaRowHtml = (areaInfo.area || areaInfo.resp)
+      ? `<tr><td><strong>Sub Zone / Area:</strong> ${esc(areaInfo.subZone ? areaInfo.subZone + ' — ' : '')}${esc(areaInfo.area || 'N/A')}</td><td><strong>Area Team:</strong> ${esc(areaInfo.resp || 'N/A')}</td></tr>`
+      : '';
     const logoTag = LOGO_DATA ? `<img src="${LOGO_DATA}" alt="AM/NS INDIA" style="height:44px;background:#fff;padding:5px 10px;border-radius:6px;float:right;">` : '';
-    const fullHtmlReport = `<!DOCTYPE html><html><head><meta charset="utf-8"><style>body{font-family:Arial,sans-serif;margin:20px;color:#1E293B;}.header{background:#0F172A;color:white;padding:15px;border-bottom:4px solid #E31837;}.meta{margin:15px 0;font-size:13px;width:100%;border-collapse:collapse;}.meta td{padding:6px;border:1px solid #E2E8F0;background:#F8FAFC;}table.report-table{width:100%;border-collapse:collapse;font-size:11px;margin-top:10px;}table.report-table th{background:#1E293B;color:white;padding:8px;border:1px solid #CBD5E1;}</style></head><body><div class="header">${logoTag}<h2 style="margin:0;">AM/NS INDIA Pune Facility</h2><p style="margin:4px 0 0 0;font-size:12px;color:#94A3B8;">5S Compliance Review Audit Report (1S – 5S)</p></div><table class="meta"><tr><td><strong>Review Cycle:</strong> ${esc(reviewNo)}</td><td><strong>Date:</strong> ${esc(auditDate)}</td></tr><tr><td><strong>Zone / Dept:</strong> ${esc(zone)}</td><td><strong>Reviewer:</strong> ${esc(incharge)}</td></tr><tr><td><strong>Reviewer SAP ID:</strong> ${esc(reviewerSap)}</td><td><strong>Reviewer Email:</strong> ${esc(reviewerEmail)}</td></tr><tr><td colspan="2"><strong>Overall Compliance Score:</strong> <span style="font-size:16px;font-weight:bold;color:#E31837;">${scoreData.score}%</span> (${scoreData.activeCount}/${scoreData.total})</td></tr></table><table class="meta"><tr>${summaryHtml}</tr></table><table class="report-table"><thead><tr><th style="width:5%;">#</th><th style="width:30%;">Compliance Point</th><th style="width:15%;">Status</th><th style="width:25%;">Remark</th><th style="width:25%;">Captured Photos</th></tr></thead><tbody>${tableRowsHtml}</tbody></table></body></html>`;
+    const fullHtmlReport = `<!DOCTYPE html><html><head><meta charset="utf-8"><style>body{font-family:Arial,sans-serif;margin:20px;color:#1E293B;}.header{background:#0F172A;color:white;padding:15px;border-bottom:4px solid #E31837;}.meta{margin:15px 0;font-size:13px;width:100%;border-collapse:collapse;}.meta td{padding:6px;border:1px solid #E2E8F0;background:#F8FAFC;}table.report-table{width:100%;border-collapse:collapse;font-size:11px;margin-top:10px;}table.report-table th{background:#1E293B;color:white;padding:8px;border:1px solid #CBD5E1;}</style></head><body><div class="header">${logoTag}<h2 style="margin:0;">AM/NS INDIA Pune Facility</h2><p style="margin:4px 0 0 0;font-size:12px;color:#94A3B8;">5S Compliance Review Audit Report (1S – 5S)</p></div><table class="meta"><tr><td><strong>Review Cycle:</strong> ${esc(reviewNo)}</td><td><strong>Date:</strong> ${esc(auditDate)}</td></tr><tr><td><strong>Zone / Dept:</strong> ${esc(zone)}</td><td><strong>Responsible Person:</strong> ${esc(incharge)}</td></tr>${areaRowHtml}<tr><td><strong>Responsible Person SAP ID:</strong> ${esc(reviewerSap)}</td><td><strong>Responsible Person Email:</strong> ${esc(reviewerEmail)}</td></tr><tr><td colspan="2"><strong>Overall Compliance Score:</strong> <span style="font-size:16px;font-weight:bold;color:#E31837;">${scoreData.score}%</span> (${scoreData.activeCount}/${scoreData.total})</td></tr></table><table class="meta"><tr>${summaryHtml}</tr></table><table class="report-table"><thead><tr><th style="width:5%;">#</th><th style="width:55%;">Compliance Point</th><th style="width:40%;">Status</th></tr></thead><tbody>${tableRowsHtml}</tbody></table></body></html>`;
 
     const payload = {
       facility: 'AM/NS INDIA Pune Facility',
       reviewNo, date: auditDate, zone, incharge, reviewerSap, reviewerEmail,
+      subZone: areaInfo.subZone,
+      subZoneArea: areaInfo.area,
+      areaResponsible: areaInfo.resp,
       areaType: isOfficeZone(zone) ? 'Office' : 'Plant',
       complianceScore: scoreData.score,
       verifiedCount: scoreData.activeCount,
@@ -812,10 +955,10 @@ async function submitAssessment() {
     btn.disabled = false;
   }
   if (submitted) {
-    await startFreshForm(zone);
+    await startFreshForm(draftKey);
     statusMsg.innerHTML = '<span style="color:#10B981;">✓ Review submitted! PDF and Excel reports are being emailed. A fresh form is ready.</span>';
     setSaveStatus(true, '💾 Autosave on');
-    showSuccess(zone, reviewNo, auditDate, scoreData.score);
+    showSuccess(zoneLabel, reviewNo, auditDate, scoreData.score);
   }
 }
 
