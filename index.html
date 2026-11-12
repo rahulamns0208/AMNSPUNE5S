@@ -76,6 +76,21 @@ body{background:linear-gradient(135deg,#0F172A,#1E293B);color:var(--s800);min-he
 @media(max-width:960px){.obs-row{grid-template-columns:1fr 1fr}.item-card{grid-template-columns:36px 1fr;gap:10px;padding:16px}.item-desc,.remark-field,.photo-field,.status-group{grid-column:1/-1}.item-desc:empty{display:none}.status-group{flex-direction:row}.btn-status{flex:1}}
 @media(max-width:600px){.obs-row{grid-template-columns:1fr}.dock-footer{flex-direction:column;text-align:center}.btn-submit{max-width:100%}.meter-container{width:100%}.score-summary-bar{flex-direction:column;align-items:stretch}.score-pill{text-align:center}}
 
+/* ===== S-WISE TABS (1S - 5S) ===== */
+.s-tabs{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:18px}
+.s-tab{border:2px solid var(--s200);background:#fff;color:var(--s800);border-radius:12px;padding:10px 4px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:2px;box-shadow:var(--sh);transition:all .2s}
+.s-tab .s-key{font-size:20px;font-weight:900;line-height:1}
+.s-tab .s-name{font-size:10px;font-weight:700;color:var(--s600);text-transform:uppercase;letter-spacing:.4px}
+.s-tab .s-count{font-size:11px;font-weight:800;background:var(--s100);color:var(--s600);padding:2px 10px;border-radius:20px;margin-top:3px}
+.s-tab.active{background:var(--s800);border-color:var(--s800);color:#fff}
+.s-tab.active .s-name{color:#CBD5E1}
+.s-tab.active .s-count{background:var(--red);color:#fff}
+.s-tab.complete .s-count{background:var(--green);color:#fff}
+.s-tab.complete:not(.active){border-color:var(--green)}
+.category-section.s-hidden{display:none}
+.btn-next-s{display:block;margin:0 auto 18px;background:var(--s800);color:#fff;border:none;padding:12px 32px;border-radius:30px;font-size:13px;font-weight:800;cursor:pointer;box-shadow:var(--sh)}
+@media(max-width:600px){.s-tabs{gap:5px}.s-tab{padding:8px 2px;border-radius:10px}.s-tab .s-key{font-size:17px}.s-tab .s-name{display:none}.s-tab .s-count{padding:2px 6px;font-size:10px}}
+
 /* ===== SUCCESS CELEBRATION ===== */
 #successOverlay{display:none;position:fixed;inset:0;z-index:200;background:rgba(15,23,42,.88);backdrop-filter:blur(4px);align-items:center;justify-content:center;padding:16px}
 #successOverlay.show{display:flex;animation:ovIn .3s ease-out}
@@ -472,6 +487,7 @@ async function switchZone() {
   }
   restoring = true;
   await loadZoneData(newZone);
+  if (activeZone !== newZone) curTab = '1S';
   activeZone = newZone;
   renderChecklist();
   applyRestoredState();
@@ -705,9 +721,14 @@ function renderChecklist() {
     { key: "5S", title: "5S — SUSTAIN (SHITSUKE) — Area Verification", items: data.s5 }
   ];
 
-  let html = '', n = 1;
-  categories.forEach(cat => {
-    html += `<div class="category-section"><div class="category-title">${cat.title}</div><div class="checklist-items">`;
+  const S_NAMES = { '1S': 'Sort', '2S': 'Set in Order', '3S': 'Shine', '4S': 'Standardize', '5S': 'Sustain' };
+  if (!S_NAMES[curTab]) curTab = '1S';
+  let html = '<div class="s-tabs">' + categories.map(c =>
+    `<button type="button" class="s-tab" data-tab="${c.key}" onclick="showTab('${c.key}')"><span class="s-key">${c.key}</span><span class="s-name">${S_NAMES[c.key]}</span><span class="s-count">0/${c.items.length}</span></button>`
+  ).join('') + '</div>';
+  let n = 1;
+  categories.forEach((cat, ci) => {
+    html += `<div class="category-section" data-section="${cat.key}"><div class="category-title">${cat.title}</div><div class="checklist-items">`;
     cat.items.forEach(item => {
       [item.id,'train_att','train_pic','bf_'+item.id,'af_'+item.id].forEach(k => { itemPhotos[k] = itemPhotos[k] || []; });
       html += `
@@ -727,9 +748,33 @@ function renderChecklist() {
         </div>`;
     });
     html += `</div></div>`;
+    const nx = categories[ci + 1];
+    html += `<button type="button" class="btn-next-s" data-section-btn="${cat.key}" onclick="showTab('${nx ? nx.key : ''}')">${nx ? 'Next: ' + nx.key + ' →' : ''}</button>`;
   });
   document.getElementById('checklistContainer').innerHTML = html;
+  const lastBtn = document.querySelector('.btn-next-s[data-section-btn="5S"]'); if (lastBtn) lastBtn.remove();
+  showTab(curTab, true);
   updateScoreMeter();
+}
+
+/* S-wise tabs: only the selected S (1S-5S) is visible; all points stay in the page so score, autosave and submit still cover all 28 */
+let curTab = '1S';
+function showTab(key, noScroll) {
+  if (!key) return;
+  curTab = key;
+  document.querySelectorAll('.category-section').forEach(sec => sec.classList.toggle('s-hidden', sec.getAttribute('data-section') !== key));
+  document.querySelectorAll('.btn-next-s').forEach(b => b.style.display = b.getAttribute('data-section-btn') === key ? 'block' : 'none');
+  document.querySelectorAll('.s-tab').forEach(t => t.classList.toggle('active', t.getAttribute('data-tab') === key));
+  if (!noScroll) { const t = document.querySelector('.s-tabs'); if (t) t.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+}
+function updateTabBadges() {
+  document.querySelectorAll('.s-tab').forEach(t => {
+    const k = t.getAttribute('data-tab');
+    const rows = document.querySelectorAll('.item-card[data-cat="' + k + '"]');
+    let ok = 0; rows.forEach(r => { if (rowStatus(r) === 'ok') ok++; });
+    t.querySelector('.s-count').innerText = ok + '/' + rows.length;
+    t.classList.toggle('complete', rows.length > 0 && ok === rows.length);
+  });
 }
 
 function resetUploadBtn(itemId) {
@@ -808,6 +853,7 @@ function updateScoreMeter() {
   pill.innerText = score + '%';
   fill.style.width = score + '%';
   document.getElementById('scoreCount').innerText = `${active} / ${rowsAll.length} verified`;
+  updateTabBadges();
   const color = score >= 90 ? '#10B981' : score >= 50 ? '#F59E0B' : '#E31837';
   pill.style.background = color;
   fill.style.background = color;
