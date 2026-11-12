@@ -87,7 +87,10 @@ body{background:linear-gradient(135deg,#0F172A,#1E293B);color:var(--s800);min-he
 .s-tab.active .s-count{background:var(--red);color:#fff}
 .s-tab.complete .s-count{background:var(--green);color:#fff}
 .s-tab.complete:not(.active){border-color:var(--green)}
+.s-tab.partial:not(.complete):not(.active){border-color:var(--amber)}
 .category-section.s-hidden{display:none}
+.sched-hint{margin-top:2px;font-size:11px;font-weight:700;color:#047857;background:#ECFDF5;border:1px solid #A7F3D0;border-radius:8px;padding:6px 10px}
+.sched-hint.warn{color:#B45309;background:#FFFBEB;border-color:#FDE68A}
 .btn-next-s{display:block;margin:0 auto 18px;background:var(--s800);color:#fff;border:none;padding:12px 32px;border-radius:30px;font-size:13px;font-weight:800;cursor:pointer;box-shadow:var(--sh)}
 @media(max-width:600px){.s-tabs{gap:5px}.s-tab{padding:8px 2px;border-radius:10px}.s-tab .s-key{font-size:17px}.s-tab .s-name{display:none}.s-tab .s-count{padding:2px 6px;font-size:10px}}
 
@@ -159,7 +162,7 @@ body{background:linear-gradient(135deg,#0F172A,#1E293B);color:var(--s800);min-he
     </div>
     <div class="input-field" id="subZoneField" style="display:none;"><label for="subZone">Sub Zone Selection</label><select id="subZone" onchange="onSubChange()"></select></div>
     <div class="input-field" id="areaField" style="display:none;"><label for="subArea">Area Covered</label><input type="text" id="subArea" readonly></div>
-    <div class="input-field" id="respField"><label for="areaResp">Area Responsible Person</label><select id="areaResp" onchange="onRespChange()"></select></div>
+    <div class="input-field" id="respField"><label for="areaResp">Area Responsible Person</label><select id="areaResp" onchange="onRespChange()"></select><div id="schedHint" class="sched-hint" style="display:none;"></div></div>
     <div class="input-field" id="respOtherField" style="display:none;"><label for="respOther">Responsible Person Name</label><input type="text" id="respOther" placeholder="Enter name" onchange="fillRespDetails(false)"></div>
     <div class="input-field"><label for="reviewerSap">Responsible Person SAP ID</label><input type="text" id="reviewerSap" placeholder="e.g. 10023456"></div>
     <div class="input-field"><label for="reviewerEmail">Responsible Person Mail ID</label><input type="email" id="reviewerEmail" placeholder="name@amns.in"></div>
@@ -250,6 +253,36 @@ const ZONE_RESP = {
   "UK SLITTER": "Narendra Chambhare / Kondiba Pawale"
 };
 
+/* ============================================================
+   REVIEW SCHEDULE (from 5S_Daily_Review_Schedule_CGL1_CGL2_Gas_Offline.xlsx, 2026-11-15 to 2026-11-30).
+   Key = review date -> "Zone" or "Zone::Sub Zone" -> scheduled reviewer.
+   A date with no entry for an area means nobody is scheduled that day (week off / leave / no eligible person).
+   Replace this block when a new schedule is made.
+   ============================================================ */
+const REVIEW_SCHEDULE = {"2026-11-15":{"CGL -1::1. ENTRY SECTION":"Vishal Yadav","CGL -1::3. SKINPASS":"Sandesh Sutar","CGL -1::4. EXIT SECTION":"Niraj Mane","CGL -2::1. ENTRY SECTION":"Vipul Agre","CGL -2::2. PROCESS SECTION":"Pritam Gupta","CGL -2::3. SKINPASS":"Suryakant Pawar","CGL -2::4. EXIT SECTION":"Sagar Shinde","N2-H2 GAS PLANT":"Amit Pradhan","OFFLINE SPM/B&K":"Narendra Chambhare"},"2026-11-16":{"CGL -1::1. ENTRY SECTION":"Omkar Dhemare","CGL -1::2. PROCESS SECTION":"Amol Wadalkar","CGL -1::3. SKINPASS":"Nitin Patil","CGL -1::4. EXIT SECTION":"Dajiba Patil","CGL -2::1. ENTRY SECTION":"Vaibhav Shindekar","CGL -2::2. PROCESS SECTION":"Anil Shirke","CGL -2::3. SKINPASS":"Sunil Sharma","CGL -2::4. EXIT SECTION":"Harendra Singh","N2-H2 GAS PLANT":"Abhijit Kunde","OFFLINE SPM/B&K":"Devesh Sharma"},"2026-11-17":{"CGL -1::1. ENTRY SECTION":"Anshit kumar Gautam","CGL -1::2. PROCESS SECTION":"Narendra Chambhare","CGL -1::3. SKINPASS":"Sandesh Sutar","CGL -2::1. ENTRY SECTION":"Vipul Agre","CGL -2::2. PROCESS SECTION":"Pankaj Deore","CGL -2::3. SKINPASS":"Suryakant Pawar","CGL -2::4. EXIT SECTION":"Sagar Shinde","N2-H2 GAS PLANT":"Amit Pradhan","OFFLINE SPM/B&K":"Kondiba Pawale"},"2026-11-18":{"CGL -1::1. ENTRY SECTION":"Vishal Yadav","CGL -1::2. PROCESS SECTION":"Swarnalata Rani","CGL -1::3. SKINPASS":"Nitin Patil","CGL -1::4. EXIT SECTION":"Niraj Mane","CGL -2::1. ENTRY SECTION":"Ashutosh Dash","CGL -2::2. PROCESS SECTION":"Pritam Gupta","CGL -2::3. SKINPASS":"Sunil Sharma","CGL -2::4. EXIT SECTION":"Harendra Singh","N2-H2 GAS PLANT":"Abhijit Kunde","OFFLINE SPM/B&K":"Devesh Sharma"},"2026-11-19":{"CGL -1::1. ENTRY SECTION":"Anshit kumar Gautam","CGL -1::2. PROCESS SECTION":"Narendra Chambhare","CGL -1::3. SKINPASS":"Sandesh Sutar","CGL -1::4. EXIT SECTION":"Dajiba Patil","CGL -2::1. ENTRY SECTION":"Vaibhav Shindekar","CGL -2::2. PROCESS SECTION":"Pankaj Deore","CGL -2::4. EXIT SECTION":"Sagar Shinde","N2-H2 GAS PLANT":"Amit Pradhan","OFFLINE SPM/B&K":"Kondiba Pawale"},"2026-11-20":{"CGL -1::1. ENTRY SECTION":"Vishal Yadav","CGL -1::2. PROCESS SECTION":"Swarnalata Rani","CGL -1::3. SKINPASS":"Nitin Patil","CGL -1::4. EXIT SECTION":"Niraj Mane","CGL -2::1. ENTRY SECTION":"Vipul Agre","CGL -2::2. PROCESS SECTION":"Pritam Gupta","CGL -2::3. SKINPASS":"Suryakant Pawar","CGL -2::4. EXIT SECTION":"Harendra Singh","N2-H2 GAS PLANT":"Abhijit Kunde","OFFLINE SPM/B&K":"Devesh Sharma"},"2026-11-21":{"CGL -1::1. ENTRY SECTION":"Omkar Dhemare","CGL -1::2. PROCESS SECTION":"Amol Wadalkar","CGL -1::3. SKINPASS":"Sandesh Sutar","CGL -1::4. EXIT SECTION":"Dajiba Patil","CGL -2::1. ENTRY SECTION":"Vaibhav Shindekar","CGL -2::2. PROCESS SECTION":"Anil Shirke","CGL -2::3. SKINPASS":"Sunil Sharma","CGL -2::4. EXIT SECTION":"Sagar Shinde","N2-H2 GAS PLANT":"Amit Pradhan"},"2026-11-22":{"CGL -1::1. ENTRY SECTION":"Vishal Yadav","CGL -1::2. PROCESS SECTION":"Narendra Chambhare","CGL -1::4. EXIT SECTION":"Niraj Mane","CGL -2::1. ENTRY SECTION":"Ashutosh Dash","CGL -2::2. PROCESS SECTION":"Pankaj Deore","CGL -2::3. SKINPASS":"Suryakant Pawar","N2-H2 GAS PLANT":"Abhijit Kunde"},"2026-11-23":{"CGL -1::1. ENTRY SECTION":"Omkar Dhemare","CGL -1::2. PROCESS SECTION":"Swarnalata Rani","CGL -1::3. SKINPASS":"Sandesh Sutar","CGL -1::4. EXIT SECTION":"Dajiba Patil","CGL -2::1. ENTRY SECTION":"Vaibhav Shindekar","CGL -2::2. PROCESS SECTION":"Pritam Gupta","CGL -2::3. SKINPASS":"Sunil Sharma","CGL -2::4. EXIT SECTION":"Harendra Singh","N2-H2 GAS PLANT":"Amit Pradhan","OFFLINE SPM/B&K":"Kondiba Pawale"},"2026-11-24":{"CGL -1::1. ENTRY SECTION":"Vishal Yadav","CGL -1::2. PROCESS SECTION":"Amol Wadalkar","CGL -1::3. SKINPASS":"Nitin Patil","CGL -1::4. EXIT SECTION":"Niraj Mane","CGL -2::1. ENTRY SECTION":"Ashutosh Dash","CGL -2::2. PROCESS SECTION":"Pankaj Deore","CGL -2::3. SKINPASS":"Suryakant Pawar","CGL -2::4. EXIT SECTION":"Sagar Shinde","N2-H2 GAS PLANT":"Abhijit Kunde","OFFLINE SPM/B&K":"Devesh Sharma"},"2026-11-25":{"CGL -1::1. ENTRY SECTION":"Anshit kumar Gautam","CGL -1::2. PROCESS SECTION":"Swarnalata Rani","CGL -1::4. EXIT SECTION":"Dajiba Patil","CGL -2::1. ENTRY SECTION":"Vaibhav Shindekar","CGL -2::2. PROCESS SECTION":"Jhansi Manupati","CGL -2::3. SKINPASS":"Sunil Sharma","CGL -2::4. EXIT SECTION":"Harendra Singh","N2-H2 GAS PLANT":"Amit Pradhan","OFFLINE SPM/B&K":"Kondiba Pawale"},"2026-11-26":{"CGL -1::1. ENTRY SECTION":"Omkar Dhemare","CGL -1::2. PROCESS SECTION":"Amol Wadalkar","CGL -1::3. SKINPASS":"Nitin Patil","CGL -1::4. EXIT SECTION":"Niraj Mane","CGL -2::1. ENTRY SECTION":"Ashutosh Dash","CGL -2::2. PROCESS SECTION":"Anil Shirke","CGL -2::3. SKINPASS":"Suryakant Pawar","CGL -2::4. EXIT SECTION":"Sagar Shinde","N2-H2 GAS PLANT":"Pankaj Deore","OFFLINE SPM/B&K":"Narendra Chambhare"},"2026-11-27":{"CGL -1::1. ENTRY SECTION":"Anshit kumar Gautam","CGL -1::2. PROCESS SECTION":"Swarnalata Rani","CGL -1::3. SKINPASS":"Sandesh Sutar","CGL -2::1. ENTRY SECTION":"Vaibhav Shindekar","CGL -2::2. PROCESS SECTION":"Pritam Gupta","CGL -2::3. SKINPASS":"Rahul Kumawat","CGL -2::4. EXIT SECTION":"Harendra Singh","N2-H2 GAS PLANT":"Abhijit Kunde","OFFLINE SPM/B&K":"Devesh Sharma"},"2026-11-28":{"CGL -1::1. ENTRY SECTION":"Omkar Dhemare","CGL -1::2. PROCESS SECTION":"Amol Wadalkar","CGL -1::3. SKINPASS":"Nitin Patil","CGL -1::4. EXIT SECTION":"Dajiba Patil","CGL -2::1. ENTRY SECTION":"Vipul Agre","CGL -2::2. PROCESS SECTION":"Jhansi Manupati","CGL -2::3. SKINPASS":"Sunil Sharma","N2-H2 GAS PLANT":"Pankaj Deore","OFFLINE SPM/B&K":"Kondiba Pawale"},"2026-11-29":{"CGL -1::1. ENTRY SECTION":"Vishal Yadav","CGL -1::3. SKINPASS":"Sandesh Sutar","CGL -1::4. EXIT SECTION":"Niraj Mane","CGL -2::1. ENTRY SECTION":"Ashutosh Dash","CGL -2::2. PROCESS SECTION":"Pritam Gupta","CGL -2::3. SKINPASS":"Suryakant Pawar","CGL -2::4. EXIT SECTION":"Sagar Shinde","N2-H2 GAS PLANT":"Abhijit Kunde","OFFLINE SPM/B&K":"Narendra Chambhare"},"2026-11-30":{"CGL -1::1. ENTRY SECTION":"Omkar Dhemare","CGL -1::2. PROCESS SECTION":"Amol Wadalkar","CGL -1::3. SKINPASS":"Nitin Patil","CGL -1::4. EXIT SECTION":"Dajiba Patil","CGL -2::1. ENTRY SECTION":"Vaibhav Shindekar","CGL -2::2. PROCESS SECTION":"Pankaj Deore","CGL -2::3. SKINPASS":"Sunil Sharma","CGL -2::4. EXIT SECTION":"Harendra Singh","N2-H2 GAS PLANT":"Amit Pradhan","OFFLINE SPM/B&K":"Devesh Sharma"}};
+const SCHED_FIRST = '2026-11-15', SCHED_LAST = '2026-11-30';
+function schedKey() { const z = document.getElementById('zone').value; return SUBZONES[z] ? z + '::' + document.getElementById('subZone').value : z; }
+const SCHED_ZONES = new Set(Object.values(REVIEW_SCHEDULE).flatMap(o => Object.keys(o).map(k => k.split('::')[0])));
+/* Fills the scheduled reviewer for the chosen date + area and shows a hint under the person field */
+function applyScheduled() {
+  const hint = document.getElementById('schedHint');
+  const date = document.getElementById('auditDate').value, zone = document.getElementById('zone').value;
+  if (!hint) return;
+  if (!date || !SCHED_ZONES.has(zone) || date < SCHED_FIRST || date > SCHED_LAST) { hint.style.display = 'none'; return; }
+  const who = (REVIEW_SCHEDULE[date] || {})[schedKey()];
+  hint.style.display = 'block';
+  if (!who) { hint.className = 'sched-hint warn'; hint.innerText = '📅 No review scheduled for this area on this date (week off / leave / no eligible reviewer).'; return; }
+  const sel = document.getElementById('areaResp');
+  if (Array.from(sel.options).some(o => o.value === who)) { sel.value = who; toggleOther(); fillRespDetails(true); }
+  hint.className = 'sched-hint'; hint.innerText = '📅 Scheduled reviewer for this area on this date: ' + who;
+}
+function checkSched() {
+  const hint = document.getElementById('schedHint'); if (!hint || hint.style.display === 'none') return;
+  const date = document.getElementById('auditDate').value, who = (REVIEW_SCHEDULE[date] || {})[schedKey()], cur = getResponsible();
+  if (who && cur && cur !== who) { hint.className = 'sched-hint warn'; hint.innerText = '⚠ Scheduled reviewer for this area on this date is ' + who + ', not ' + cur + '.'; }
+  else if (who) { hint.className = 'sched-hint'; hint.innerText = '📅 Scheduled reviewer for this area on this date: ' + who; }
+}
+
 /* ================= AUTOSAVE (IndexedDB) ================= */
 const DB_NAME = 'amns_5s_draft', DB_STORE = 'kv';
 let dbPromise = null, autosaveOK = true, activeZone = null, restoring = false;
@@ -326,6 +359,7 @@ function populateResp(pref, other) {
   document.getElementById('respOther').value = other || '';
   toggleOther();
   if (!pref) fillRespDetails(false);
+  if (!pref && !restoring) applyScheduled();
 }
 function toggleOther() {
   document.getElementById('respOtherField').style.display = document.getElementById('areaResp').value === '__other' ? 'flex' : 'none';
@@ -382,7 +416,7 @@ function fillRespDetails(force) {
   lastAuto = { sap: sap, email: mail };
   scheduleSave();
 }
-function onRespChange() { toggleOther(); fillRespDetails(true); }
+function onRespChange() { toggleOther(); fillRespDetails(true); checkSched(); }
 
 function getResponsible() {
   const v = document.getElementById('areaResp').value;
@@ -509,7 +543,14 @@ async function restoreDraft() {
   populateSub(savedSub);
   populateResp(savedResp, savedOther);
   restoring = false;
+  /* Link params (from the alert mail): ?zone=CGL -2&sub=2. PROCESS SECTION&date=2026-11-16 */
+  const qp = new URLSearchParams(location.search), qz = qp.get('zone');
+  if (qz && Array.from(document.getElementById('zone').options).some(o => o.value === qz)) {
+    document.getElementById('zone').value = qz; populateSub(qp.get('sub') || ''); savedResp = '';
+  }
+  if (qp.get('date') && /^\d{4}-\d{2}-\d{2}$/.test(qp.get('date'))) { document.getElementById('auditDate').value = qp.get('date'); savedResp = ''; }
   await switchZone();
+  if (!savedResp) applyScheduled(); else checkSched();
   let n = 0; Object.keys(itemPhotos).forEach(k => n += itemPhotos[k].length);
   const done = Object.values(itemState).filter(s => s.status === 'ok' || s.done).length;
   if (n || done || Object.values(itemState).some(s => s.remark || s.obs || s.act)) setSaveStatus(true, '♻ Draft restored (' + done + ' verified, ' + n + ' photos) – autosave on');
@@ -528,11 +569,13 @@ async function startFreshForm(submittedKey) {
   populateSub();
   activeZone = null; restoring = false;
   await switchZone();
+  applyScheduled();
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 document.addEventListener('input', e => { if (e.target.closest('.audit-meta-grid, .item-card')) scheduleSave(); });
 document.addEventListener('change', e => { if (e.target.closest('.audit-meta-grid') && e.target.id !== 'zone' && e.target.id !== 'subZone') scheduleSave(); });
+document.getElementById('auditDate').addEventListener('change', () => { if (!restoring) applyScheduled(); });
 document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'hidden') flushSave(); });
 window.addEventListener('pagehide', flushSave);
 
@@ -773,7 +816,9 @@ function updateTabBadges() {
     const rows = document.querySelectorAll('.item-card[data-cat="' + k + '"]');
     let ok = 0; rows.forEach(r => { if (rowStatus(r) === 'ok') ok++; });
     t.querySelector('.s-count').innerText = ok + '/' + rows.length;
+    let mk = 0; rows.forEach(r => { if (rowStatus(r)) mk++; });
     t.classList.toggle('complete', rows.length > 0 && ok === rows.length);
+    t.classList.toggle('partial', mk > 0 && mk < rows.length);
   });
 }
 
@@ -964,10 +1009,14 @@ async function submitAssessment() {
     return;
   }
 
+  /* points not marked score zero: WARNING ONLY (does not stop the submit) */
+  const unmarked = {};
+  document.querySelectorAll('.item-card').forEach(r => { if (!rowStatus(r)) { const c = r.getAttribute('data-cat'); unmarked[c] = (unmarked[c] || 0) + 1; } });
+  const unList = Object.keys(unmarked).map(k => k + ': ' + unmarked[k]).join(' | ');
   btn.disabled = true;
   const scoreData = updateScoreMeter();
   const rows = document.querySelectorAll('.item-card');
-  statusMsg.innerHTML = '<span style="color:#F59E0B;">⏳ Processing images & building PDF + Excel report...</span>';
+  statusMsg.innerHTML = (unList ? '<span style="color:#B45309;">⚠ Not marked (scored zero) – ' + unList + '</span><br>' : '') + '<span style="color:#F59E0B;">⏳ Processing images & building PDF + Excel report...</span>';
 
   const reviewNo = document.getElementById('reviewNo').value;
   const auditDate = document.getElementById('auditDate').value;
